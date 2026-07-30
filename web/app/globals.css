@@ -289,22 +289,6 @@ a {
   font-size: 18px;
 }
 
-.button-danger,
-.button-danger-quiet {
-  color: var(--coral-dark);
-  border-color: #d8a69f;
-}
-
-.button-danger {
-  color: var(--white);
-  background: var(--coral-dark);
-  border-color: var(--coral-dark);
-}
-
-.button-danger-quiet {
-  background: #fff7f4;
-}
-
 .hero,
 .metrics,
 .scope-banner,
@@ -1415,29 +1399,6 @@ footer p {
   margin: 14px 0 0;
   color: var(--ink-soft);
   font-size: 10px;
-}
-
-.confirm-modal {
-  width: min(500px, 100%);
-}
-
-.confirm-modal > p:not(.eyebrow) {
-  color: var(--ink-soft);
-}
-
-.confirm-modal .field-stack {
-  margin-top: 24px;
-}
-
-.danger-text {
-  color: var(--coral-dark);
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 26px;
 }
 
 .toast {

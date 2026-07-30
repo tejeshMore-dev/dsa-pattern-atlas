@@ -14,16 +14,19 @@ import {
   buildBackup,
   calculatePace,
   createProgress,
+  DEFAULT_SETTINGS,
   difficultyWeight,
   isSolved,
-  loadLocalProgress,
-  loadLocalSettings,
   mergeProgress,
   parseBackup,
-  saveLocalProgress,
-  saveLocalSettings,
   STATUS_LABELS,
 } from "../lib/progress";
+import {
+  loadLocalData,
+  saveLocalProgressRecord,
+  saveLocalProgressSnapshot,
+  saveLocalSettings,
+} from "../lib/local-db";
 import {
   cloudConfigured,
   progressFromRows,
@@ -97,8 +100,9 @@ function LoadingScreen() {
 export default function TrackerApp() {
   const [catalog, setCatalog] = useState<CurriculumData | null>(null);
   const [loadError, setLoadError] = useState("");
-  const [progress, setProgress] = useState<ProgressMap>(() => loadLocalProgress());
-  const [settings, setSettings] = useState<TrackerSettings>(() => loadLocalSettings());
+  const [progress, setProgress] = useState<ProgressMap>({});
+  const [settings, setSettings] = useState<TrackerSettings>(DEFAULT_SETTINGS);
+  const [localDatabaseReady, setLocalDatabaseReady] = useState(false);
   const [clock, setClock] = useState(0);
   const [user, setUser] = useState<User | null>(null);
   const [cloudState, setCloudState] = useState<
@@ -113,8 +117,6 @@ export default function TrackerApp() {
   const [openPatterns, setOpenPatterns] = useState<Set<number>>(new Set([1]));
   const [selectedProblemId, setSelectedProblemId] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [showReset, setShowReset] = useState(false);
-  const [resetText, setResetText] = useState("");
   const importInputRef = useRef<HTMLInputElement>(null);
   const cloudTimers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
 
@@ -144,6 +146,28 @@ export default function TrackerApp() {
   }, []);
 
   useEffect(() => {
+    let active = true;
+    void loadLocalData()
+      .then((localData) => {
+        if (!active) return;
+        setProgress(localData.progress);
+        setSettings(localData.settings);
+        setLocalDatabaseReady(true);
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+        setLoadError(
+          error instanceof Error
+            ? error.message
+            : "Pattern Atlas could not open its local database.",
+        );
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!supabase) return;
     void supabase.auth.getSession().then(({ data }) => setUser(data.session?.user ?? null));
     const { data } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -165,7 +189,6 @@ export default function TrackerApp() {
     async (activeUser: User) => {
       if (!supabase) return;
       setCloudState("connecting");
-      const localSnapshot = loadLocalProgress();
       const [progressResult, settingsResult] = await Promise.all([
         supabase.from("user_progress").select("*"),
         supabase.from("user_settings").select("*").maybeSingle(),
@@ -181,17 +204,20 @@ export default function TrackerApp() {
         return;
       }
 
+      const localData = await loadLocalData();
       const remote = progressFromRows(progressResult.data ?? []);
-      const merged = mergeProgress(localSnapshot, remote);
+      const merged = mergeProgress(localData.progress, remote);
       setProgress(merged);
-      saveLocalProgress(merged);
+      await saveLocalProgressSnapshot(merged);
 
       if (settingsResult.data) {
         const remoteSettings = settingsFromRow(settingsResult.data);
         setSettings(remoteSettings);
-        saveLocalSettings(remoteSettings);
+        await saveLocalSettings(remoteSettings);
       } else {
-        await supabase.from("user_settings").upsert(settingsToRow(activeUser, loadLocalSettings()));
+        await supabase
+          .from("user_settings")
+          .upsert(settingsToRow(activeUser, localData.settings));
       }
 
       const records = Object.values(merged);
@@ -212,10 +238,15 @@ export default function TrackerApp() {
   );
 
   useEffect(() => {
-    if (!user) return;
-    const timer = window.setTimeout(() => void syncCloud(user), 0);
+    if (!user || !localDatabaseReady) return;
+    const timer = window.setTimeout(() => {
+      void syncCloud(user).catch((error: unknown) => {
+        setCloudState("error");
+        announce(error instanceof Error ? error.message : "Cloud sync failed.");
+      });
+    }, 0);
     return () => window.clearTimeout(timer);
-  }, [user, syncCloud]);
+  }, [announce, localDatabaseReady, user, syncCloud]);
 
   useEffect(() => {
     const timers = cloudTimers.current;
@@ -226,10 +257,11 @@ export default function TrackerApp() {
 
   const saveRecord = useCallback(
     (record: ProgressRecord) => {
-      setProgress((current) => {
-        const next = { ...current, [record.problemId]: record };
-        saveLocalProgress(next);
-        return next;
+      setProgress((current) => ({ ...current, [record.problemId]: record }));
+      void saveLocalProgressRecord(record).catch((error: unknown) => {
+        announce(
+          error instanceof Error ? error.message : "The local database write failed.",
+        );
       });
 
       if (!supabase || !user) return;
@@ -275,7 +307,11 @@ export default function TrackerApp() {
     (patch: Partial<TrackerSettings>) => {
       const next = { ...settings, ...patch };
       setSettings(next);
-      saveLocalSettings(next);
+      void saveLocalSettings(next).catch((error: unknown) => {
+        announce(
+          error instanceof Error ? error.message : "The local settings write failed.",
+        );
+      });
       if (supabase && user) {
         void supabase
           .from("user_settings")
@@ -329,8 +365,10 @@ export default function TrackerApp() {
       const merged = mergeProgress(progress, backup.progress);
       setProgress(merged);
       setSettings(backup.settings);
-      saveLocalProgress(merged);
-      saveLocalSettings(backup.settings);
+      await Promise.all([
+        saveLocalProgressSnapshot(merged),
+        saveLocalSettings(backup.settings),
+      ]);
       if (supabase && user && Object.keys(merged).length) {
         const { error } = await supabase
           .from("user_progress")
@@ -342,22 +380,6 @@ export default function TrackerApp() {
     } catch (error) {
       announce(error instanceof Error ? error.message : "Import failed.");
     }
-  };
-
-  const resetProgress = async () => {
-    if (resetText !== "RESET") return;
-    setProgress({});
-    saveLocalProgress({});
-    if (supabase && user) {
-      const { error } = await supabase.rpc("reset_my_progress", {
-        p_confirmation: "RESET",
-      });
-      if (error) announce(error.message);
-    }
-    setShowReset(false);
-    setResetText("");
-    setSelectedProblemId(null);
-    announce("Progress cleared. Your curriculum is unchanged.");
   };
 
   const problemById = useMemo(
@@ -533,7 +555,7 @@ export default function TrackerApp() {
     );
   }
 
-  if (!catalog) return <LoadingScreen />;
+  if (!catalog || !localDatabaseReady) return <LoadingScreen />;
 
   const solvedPercent = scopeProblems.length
     ? Math.round((solvedProblems.length / scopeProblems.length) * 100)
@@ -871,49 +893,7 @@ export default function TrackerApp() {
           onSignIn={signIn}
           onExport={exportProgress}
           onImport={() => importInputRef.current?.click()}
-          onReset={() => {
-            setShowSettings(false);
-            setShowReset(true);
-          }}
         />
-      ) : null}
-
-      {showReset ? (
-        <div className="modal-backdrop" role="presentation" onMouseDown={() => setShowReset(false)}>
-          <section
-            className="modal confirm-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="reset-title"
-            onMouseDown={(event) => event.stopPropagation()}
-          >
-            <button className="modal-close" onClick={() => setShowReset(false)} aria-label="Close">
-              ×
-            </button>
-            <p className="eyebrow danger-text">Destructive action</p>
-            <h2 id="reset-title">Clear all progress?</h2>
-            <p>
-              This removes every status, note, attempt, and time entry from this browser
-              {user ? " and your signed-in account" : ""}. Export a backup first if needed.
-            </p>
-            <label className="field-stack">
-              Type <strong>RESET</strong> to confirm
-              <input value={resetText} onChange={(event) => setResetText(event.target.value)} />
-            </label>
-            <div className="modal-actions">
-              <button className="button button-quiet" onClick={() => setShowReset(false)}>
-                Cancel
-              </button>
-              <button
-                className="button button-danger"
-                disabled={resetText !== "RESET"}
-                onClick={resetProgress}
-              >
-                Clear progress
-              </button>
-            </div>
-          </section>
-        </div>
       ) : null}
 
       <input
@@ -1221,7 +1201,6 @@ function SettingsDialog({
   onSignIn,
   onExport,
   onImport,
-  onReset,
 }: {
   settings: TrackerSettings;
   user: User | null;
@@ -1231,7 +1210,6 @@ function SettingsDialog({
   onSignIn: () => void;
   onExport: () => void;
   onImport: () => void;
-  onReset: () => void;
 }) {
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -1327,7 +1305,7 @@ function SettingsDialog({
               <span className="cloud-symbol">⌂</span>
               <span>
                 <strong>Local mode</strong>
-                <small>Progress stays in this browser. Supabase is optional.</small>
+                <small>Progress is stored in this browser&apos;s IndexedDB database.</small>
               </span>
             </div>
           )}
@@ -1342,13 +1320,10 @@ function SettingsDialog({
             <button className="button button-quiet" onClick={onImport}>
               Import backup
             </button>
-            <button className="button button-danger-quiet" onClick={onReset}>
-              Clear progress
-            </button>
           </div>
           <p className="privacy-note">
-            The shared curriculum never changes when you reset. Only your personal
-            statuses, timing, and notes are removed.
+            Export a backup before clearing browser site data. Imports safely merge
+            with the newest saved records.
           </p>
         </div>
       </section>

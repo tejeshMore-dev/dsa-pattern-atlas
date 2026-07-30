@@ -86,43 +86,6 @@ export function mergeProgress(
   return merged;
 }
 
-export function loadLocalProgress(): ProgressMap {
-  if (typeof window === "undefined") return {};
-  try {
-    const value = JSON.parse(localStorage.getItem(LOCAL_PROGRESS_KEY) ?? "{}");
-    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-    const result: ProgressMap = {};
-    for (const [key, raw] of Object.entries(value)) {
-      const id = Number(key);
-      if (!Number.isInteger(id) || !raw || typeof raw !== "object") continue;
-      result[id] = createProgress(id, raw as Partial<ProgressRecord>);
-    }
-    return result;
-  } catch {
-    return {};
-  }
-}
-
-export function saveLocalProgress(progress: ProgressMap): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(LOCAL_PROGRESS_KEY, JSON.stringify(progress));
-}
-
-export function loadLocalSettings(): TrackerSettings {
-  if (typeof window === "undefined") return DEFAULT_SETTINGS;
-  try {
-    const raw = JSON.parse(localStorage.getItem(LOCAL_SETTINGS_KEY) ?? "{}");
-    return { ...DEFAULT_SETTINGS, ...(raw as Partial<TrackerSettings>) };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
-}
-
-export function saveLocalSettings(settings: TrackerSettings): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(LOCAL_SETTINGS_KEY, JSON.stringify(settings));
-}
-
 export function difficultyWeight(problem: CurriculumProblem): number {
   return { Easy: 1, Medium: 2, Hard: 3, Unrated: 2 }[problem.difficulty];
 }
