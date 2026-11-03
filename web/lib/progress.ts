@@ -51,6 +51,22 @@ export function isSolved(record?: ProgressRecord): boolean {
   return record?.status === "solved" || record?.status === "review";
 }
 
+export function needsRevision(record?: ProgressRecord): boolean {
+  return Boolean(record?.reviewDueAt) || record?.status === "review";
+}
+
+export function toggleRevision(current: ProgressRecord): ProgressRecord {
+  const marked = needsRevision(current);
+  const now = new Date().toISOString();
+  return {
+    ...current,
+    reviewDueAt: marked ? null : now,
+    // Legacy "review" records also count as complete. Preserve that when cleared.
+    status: marked && current.status === "review" ? "solved" : current.status,
+    updatedAt: now,
+  };
+}
+
 export function applyStatus(
   current: ProgressRecord,
   status: ProgressStatus,

@@ -1,6 +1,6 @@
 # Pattern Atlas
 
-Pattern Atlas is a dependency-ordered DSA curriculum and progress tracker for interview preparation. It organizes problems by reusable algorithmic patterns instead of by data-structure chapters, then helps each learner record attempts, notes, review dates, pace, and completion.
+DSA Pattern Atlas is a dependency-ordered curriculum and progress tracker for interview preparation. It organizes questions by reusable algorithmic patterns, with completion tracking and bookmarks for questions that need revision.
 
 The repository contains both the complete [DSA Pattern Bible](./DSA_PATTERN_BIBLE.md) and a deployable web application.
 
@@ -20,14 +20,19 @@ Problems that appear under multiple patterns are deduplicated by LeetCode number
 
 - Dependency-ordered, pattern-first DSA curriculum
 - Direct LeetCode link for every problem
-- Core representative set and full curriculum modes
-- Statuses for not started, attempted, solved, review due, and skipped
-- Attempts, time spent, confidence, personal notes, and review scheduling
+- Essentials (61 questions), Interview revision (128), and Full (1,197) scopes
+- Completion checkboxes and independent Needs revision bookmarks
+- Compact portfolio-aligned layout with light and dark themes
 - Search by pattern, keyword, problem name, or LeetCode number
-- Filters for status, difficulty, and representative/reduction role
-- Progress percentage, active work, review queue, and estimated finish date
+- Filters for complete, incomplete, Needs revision, and difficulty
+- Sticky question and pattern completion counts
+- Reviewed question-specific target complexities with approach assumptions
 - Persistent browser IndexedDB with no account or backend required
 - JSON backup and merge-safe import
+
+The Python Study modal prototype is retained in the code but disabled for this
+release with `STUDY_ENABLED = false` in `web/app/TrackerApp.tsx`. Existing backup
+records remain compatible; revision bookmarks use the stored review-due field.
 - Optional GitHub sign-in and private cross-device sync through Supabase
 - Static GitHub Pages deployment workflow
 
