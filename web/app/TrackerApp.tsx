@@ -111,6 +111,23 @@ export default function TrackerApp() {
   const cloudTimers = useRef(new Map<number, ReturnType<typeof setTimeout>>());
 
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem("dsa-pattern-atlas:study-scope");
+      if (saved === "essentials" || saved === "interview" || saved === "full") {
+        // Restore after hydration so the initial server and client renders agree.
+        const timer = window.setTimeout(() => setStudyScope(saved), 0);
+        return () => window.clearTimeout(timer);
+      }
+    } catch { /* Scope switching still works when storage is unavailable. */ }
+  }, []);
+
+  const selectStudyScope = (scope: StudyScope) => {
+    setStudyScope(scope);
+    setOpenPatterns(new Set());
+    try { localStorage.setItem("dsa-pattern-atlas:study-scope", scope); } catch { /* Keep the selection for this session. */ }
+  };
+
+  useEffect(() => {
     if (!showInfo) return;
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") setShowInfo(false);
@@ -501,7 +518,7 @@ export default function TrackerApp() {
           <div className="study-scope-row">
             <div className="study-tabs" role="group" aria-label="Study scope">
               {STUDY_SCOPES.map((scope) => (
-                <button key={scope.id} aria-pressed={studyScope === scope.id} onClick={() => { setStudyScope(scope.id); setOpenPatterns(new Set()); }}>
+                <button key={scope.id} aria-pressed={studyScope === scope.id} onClick={() => selectStudyScope(scope.id)}>
                   <span>{scope.label}</span><small className="scope-tab-count">{formatNumber(scopeCounts[scope.id])}</small>
                 </button>
               ))}
