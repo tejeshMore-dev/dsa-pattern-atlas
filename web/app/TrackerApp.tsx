@@ -10,11 +10,13 @@ import {
 } from "react";
 import type { User } from "@supabase/supabase-js";
 import ThemeToggle from "./ThemeToggle";
+import FilterSelect from "./FilterSelect";
+import HeaderSettings from "./HeaderSettings";
+import FilterPanel from "./FilterPanel";
 import SlidingWindowStudy from "./SlidingWindowStudy";
 import PatternStudy from "./PatternStudy";
 import { STUDY_LESSONS } from "../lib/study-lessons";
 import { COMPLEXITY_TARGETS } from "../lib/complexity-targets";
-import { WINDOW_IDEA, WINDOW_CUES } from "../lib/sliding-window-study";
 import { buildStudyPatterns, STUDY_SCOPES, type StudyScope } from "../lib/study-scopes";
 import {
   applyStatus,
@@ -461,7 +463,6 @@ export default function TrackerApp() {
   const activeFilterCount = [
     statusFilter !== "all",
     difficultyFilter !== "all",
-    Boolean(query),
   ].filter(Boolean).length;
 
   return (
@@ -505,9 +506,7 @@ export default function TrackerApp() {
               Sign in to sync
             </button>
           ) : null}
-          <button className="button button-small" onClick={() => setShowInfo(true)} aria-label="About DSA Pattern Atlas">ⓘ About</button>
-          <button className="button button-small" aria-label="Import backup" onClick={() => importInputRef.current?.click()}>Import</button>
-          <button className="button button-small" aria-label="Export backup" onClick={exportProgress}>Export</button>
+          <HeaderSettings onAbout={() => setShowInfo(true)} onImport={() => importInputRef.current?.click()} onExport={exportProgress} />
         </nav>
       </header>
 
@@ -540,48 +539,30 @@ export default function TrackerApp() {
                 </button>
               ) : null}
             </label>
-            <label>
-              <span className="sr-only">Filter by status</span>
-              <select
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-              >
-                <option value="all">All questions</option>
-                <option value="incomplete">Incomplete</option>
-                <option value="complete">Complete</option>
-                <option value="revision">Needs revision</option>
-              </select>
-            </label>
-            <label>
-              <span className="sr-only">Filter by difficulty</span>
-              <select
-                value={difficultyFilter}
-                onChange={(event) =>
-                  setDifficultyFilter(event.target.value as DifficultyFilter)
-                }
-              >
-                <option value="all">All difficulties</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-            </label>
+            <FilterPanel count={activeFilterCount} onReset={() => { setStatusFilter("all"); setDifficultyFilter("all"); }}>
+            <div className="filter-panel-field"><span>Completion</span><FilterSelect label="Filter by status" value={statusFilter} onChange={(value) => setStatusFilter(value as StatusFilter)} options={[
+              { value: "all", label: "All questions" },
+              { value: "incomplete", label: "Incomplete", tone: "muted" },
+              { value: "complete", label: "Complete", tone: "green" },
+              { value: "revision", label: "Needs revision", tone: "gold" },
+            ]} /></div>
+            <div className="filter-panel-field"><span>Difficulty</span><FilterSelect label="Filter by difficulty" value={difficultyFilter} onChange={(value) => setDifficultyFilter(value as DifficultyFilter)} options={[
+              { value: "all", label: "All difficulties" },
+              { value: "Easy", label: "Easy", tone: "green" },
+              { value: "Medium", label: "Medium", tone: "gold" },
+              { value: "Hard", label: "Hard", tone: "coral" },
+            ]} /></div>
+            </FilterPanel>
             <button className="button button-small expand-toggle" disabled={!filteredPatterns.length} onClick={toggleVisible}>
               {allVisibleExpanded ? "Collapse all" : "Expand all"}
             </button>
-            {activeFilterCount ? (
-              <button
-                className="filter-reset"
-                onClick={() => {
-                  setQuery("");
-                  setStatusFilter("all");
-                  setDifficultyFilter("all");
-                }}
-              >
-                Clear {activeFilterCount}
-              </button>
-            ) : null}
           </div>
+
+          {activeFilterCount > 0 && <div className="active-filter-chips" aria-label="Active filters">
+            {statusFilter !== "all" && <button onClick={() => setStatusFilter("all")} aria-label="Remove completion filter">{statusFilter === "revision" ? "Needs revision" : statusFilter === "complete" ? "Complete" : "Incomplete"}<span aria-hidden="true">×</span></button>}
+            {difficultyFilter !== "all" && <button onClick={() => setDifficultyFilter("all")} aria-label="Remove difficulty filter">{difficultyFilter}<span aria-hidden="true">×</span></button>}
+            <span>{filteredPatterns.length} matching patterns</span>
+          </div>}
 
           <div className="pattern-list">
             {filteredPatterns.map(({ pattern, ids }, index) => (
@@ -711,12 +692,12 @@ function PatternCard({
           <div className="pattern-notes">
             <div>
               <span className="note-label">Core idea</span>
-              <p>{STUDY_LESSONS[pattern.number]?.idea ?? (pattern.number === 24 ? WINDOW_IDEA : pattern.coreIdea)}</p>
+              <p>{pattern.coreIdea}</p>
             </div>
             <div>
-              <span className="note-label">Recognition cues</span>
+              <span className="note-label">Use when</span>
               <div className="keyword-list">
-                {(STUDY_LESSONS[pattern.number]?.cues ?? (pattern.number === 24 ? WINDOW_CUES : pattern.keywords.slice(0, 6))).map((keyword) => (
+                {pattern.keywords.map((keyword) => (
                   <span key={keyword}>{keyword}</span>
                 ))}
               </div>

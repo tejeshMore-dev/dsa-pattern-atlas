@@ -10,18 +10,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Input constraints
-- Data shape
-- Contiguous vs. non-contiguous
-- Sorted or monotonic
-- Optimization vs. feasibility
-- Static vs. streaming
-- Repeated queries
-- Hidden graph or state space
+- You do not know where to start
+- The input size rules out checking every possibility
+- Sorted data, repeated queries, or relationships suggest a structure
 
 Core Idea:
 
-Classify a problem by its constraints, structure, required output, and operation model before selecting an algorithm. A correct classification sharply narrows the viable patterns and target complexity.
+Before choosing an algorithm, ask what the input looks like, how large it can be, and what the answer must contain. Use those facts to narrow down the approaches worth trying.
 
 Prerequisites:
 
@@ -88,17 +83,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Input-size constraints
-- Time-limit exceeded
-- Nested loops
-- Repeated operations
-- Memory limit
-- Amortized cost
-- Time–space tradeoff
+- Need to compare two possible solutions
+- The straightforward solution times out
+- Preprocessing may make later queries cheaper
 
 Core Idea:
 
-Translate constraints into an allowable time and space budget, then reject algorithms that exceed it. Analyze total work, including preprocessing, queries, recursion, and amortized operations.
+Count how the work and extra memory grow as the input grows. Include sorting, helper structures, recursion, and repeated queries, not just the main loop.
 
 Prerequisites:
 
@@ -164,16 +155,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Must remain true
-- Processed prefix
-- Partition boundary
-- Loop correctness
-- Valid partial solution
-- Swap or overwrite safely
+- Pointers divide processed and unprocessed items
+- An in-place update might overwrite needed information
+- A loop seems right but is hard to explain or prove
 
 Core Idea:
 
-Define a property that is true before and after every operation; that invariant becomes both the algorithm and its correctness argument. Track exactly which region or state is already valid.
+Write down what must remain true while the algorithm runs. Use that rule to decide which pointer moves, swaps, or updates are safe.
 
 Prerequisites:
 
@@ -238,16 +226,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Decision sequence
-- History-dependent choices
-- Minimal sufficient information
-- Transition between cases
-- Overlapping subproblems
-- Position plus mode
+- Future choices depend on earlier choices
+- A DP or visited key needs more than an index
+- Many different paths lead to the same remaining problem
 
 Core Idea:
 
-Represent each partial solution with the smallest state that contains everything needed for the next decision. Good state design removes irrelevant history while preserving valid transitions.
+Keep exactly the information needed to make the next decision. If two histories with the same saved state can have different futures, the state is missing something.
 
 Prerequisites:
 
@@ -314,16 +299,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Equivalent formulation
-- Hidden standard problem
-- Transform the input
-- Model as graph
-- Convert optimization to feasibility
-- Map values to states
+- A story hides a graph, interval, or subset problem
+- A difficult objective can become a yes/no check
+- Changing the representation makes a known algorithm applicable
 
 Core Idea:
 
-Transform an unfamiliar problem into a known pattern while preserving feasibility or optimality. The key is to prove that solutions correspond in both directions or that the transformed objective is equivalent.
+Rewrite the problem as one you already know how to solve. Check that the transformation keeps the original constraints and the meaning of the answer.
 
 Prerequisites:
 
@@ -391,16 +373,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Best local choice
-- Earliest finish
-- Cheapest available action
-- Irrevocable decision
-- Exchange argument
-- Stay maximally flexible
+- Each choice reduces the remaining options
+- Choosing an early finish or smaller cost may preserve flexibility
+- Need a proof that a local choice is safe
 
 Core Idea:
 
-Choose the locally best action only when an exchange, dominance, or stay-ahead argument proves it cannot harm a global optimum. Greedy state usually retains the most flexible feasible partial solution.
+Make the best immediate choice only when you can explain why it cannot block a better final answer. Try small counterexamples before trusting the rule.
 
 Prerequisites:
 
@@ -467,16 +446,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- One-pass processing
-- Adjacent comparison
-- Running counter
-- First or last occurrence
-- Local transition
-- Streamed input
+- Each answer depends on the current item and a small summary
+- Need to detect a change between neighbors
+- Input can be processed as it arrives
 
 Core Idea:
 
-Traverse the sequence once while maintaining only the state needed for the processed prefix. Update the answer at each element without revisiting earlier positions.
+Walk through the input once and update a small running summary, such as a count, previous value, or best answer so far.
 
 Prerequisites:
 
@@ -541,16 +517,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Maximum contiguous segment
-- Best ending here
-- Restart when harmful
-- Running minimum or maximum
-- Circular subarray
-- Maximum gain or difference
+- Need the best sum of a consecutive segment
+- An earlier minimum can give the best later gain
+- Keeping a harmful prefix makes the next candidate worse
 
 Core Idea:
 
-Maintain the best value ending at the current position and the best value seen globally. Discard a harmful prefix whenever restarting produces a better future candidate.
+For a maximum subarray sum, decide at each item whether to extend the previous segment or start a new one. Keep the best ending here and the best seen anywhere; other running-extremum problems keep a minimum or maximum seen earlier.
 
 Prerequisites:
 
@@ -615,16 +588,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Counts or multiplicities
-- Duplicate detection
-- Anagram
-- Pair by complement
-- Most or least frequent
-- Small bounded alphabet
+- Need duplicate detection or occurrence counts
+- Compare or group anagrams
+- Need to find a matching value seen earlier
 
 Core Idea:
 
-Replace repeated searching with a table from value to occurrence count. Frequency vectors also provide compact signatures for grouping, pairing, and equality tests.
+Use a table to count how often each value appears. Look up those counts instead of repeatedly scanning the input; for a pair target, a table can also remember earlier values.
 
 Prerequisites:
 
@@ -693,16 +663,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Values lie in an index range
-- Constant extra space
-- Missing or duplicate values
-- Input may be modified
-- Encode visited state
-- Reuse first row or column
+- Values fit a known range of array indices
+- Need missing or duplicate values with little extra memory
+- A matrix can reuse its first row and column as markers
 
 Core Idea:
 
-Use array positions as implicit storage, marking presence or state through signs, offsets, sentinels, or encoded values. Preserve enough of the original value to continue indexing correctly.
+Reuse the input array as a record of what has been seen, often by marking the position associated with a value. Only do this when mutation is allowed and the original information can still be recovered when needed.
 
 Prerequisites:
 
@@ -763,16 +730,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Values map to target indices
-- Permutation or near-permutation
-- Range 0 to n or 1 to n
-- Missing and duplicate values
-- Constant-space rearrangement
-- Follow permutation cycles
+- Values belong to a range such as 1 through n
+- Need a missing or repeated value
+- Array may be rearranged and values map to target indices
 
 Core Idea:
 
-Repeatedly swap each value into its designated index until every possible position is correct. Duplicates, missing values, and cycle structure then become visible from the remaining mismatches.
+When each value has a designated array position, swap it toward that position. Stop when it is placed, out of range, or would only swap with a duplicate.
 
 Prerequisites:
 
@@ -830,16 +794,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Contiguous range sum
-- Many range queries
-- Subarray count with target
-- Balance or net change
-- Prefix-state frequency
-- Two-dimensional region sum
+- Many sum queries on unchanged input
+- Count consecutive segments with a given sum
+- Negative numbers make a simple shrinking sum window unsuitable
 
 Core Idea:
 
-Store cumulative totals so any range aggregate becomes the difference of two prefixes. Pair prefix values with a hash map when the task asks how many earlier prefixes satisfy a target relation.
+Save the sum before each position. Get a range sum by subtracting two saved totals; for counting target-sum subarrays, count earlier prefixes with the required difference.
 
 Prerequisites:
 
@@ -905,16 +866,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Subarray XOR
-- Parity of occurrences
-- Toggle state
-- Even or odd counts
-- XOR range queries
-- Bitmask prefix state
+- Need XOR of many consecutive ranges
+- Pairs of equal values should cancel
+- A substring rule depends on odd or even character counts
 
 Core Idea:
 
-Store cumulative XOR so a range XOR is the XOR of two prefixes. For parity constraints, encode odd/even frequencies as a bitmask and match equal or nearby prefix states.
+Save cumulative XOR values. XOR two prefixes to cancel everything before a range; for odd/even count rules, toggle bits to represent parity.
 
 Prerequisites:
 
@@ -975,16 +933,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Answer excluding current index
-- Choose a split point
-- Left and right constraints
-- Influence from both directions
-- Directional aggregates
-- Two-pass preprocessing
+- Need an answer excluding the current element
+- Each position depends on both earlier and later values
+- Need to evaluate many possible split points
 
 Core Idea:
 
-Precompute summaries from the left and right so every index or split can be evaluated in constant time. The summaries may store sums, products, counts, extrema, or feasibility.
+Make one pass from the left and one from the right, saving the information each side contributes. Combine the two sides to answer a question about an index or split.
 
 Prerequisites:
 
@@ -1050,16 +1005,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Many range updates
-- Add over an interval
-- Start and end events
-- Coverage count
-- Overlapping bookings
-- Recover values afterward
+- Many additions over intervals before reading final values
+- Need accumulated bookings, passengers, or coverage
+- Processing every element of every update would be too slow
 
 Core Idea:
 
-Record only how an update changes the boundary immediately before and after a range. One final prefix sum reconstructs every point’s accumulated value in linear time.
+For an inclusive range addition, add the change at its start and subtract it just after its end. After all updates, a running sum reconstructs the value at every position.
 
 Prerequisites:
 
@@ -1125,16 +1077,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Huge sparse coordinates
-- Only relative order matters
-- Rank queries
-- Offline endpoints
-- Fenwick or segment-tree indices
-- Preserve equality and ordering
+- Coordinates are huge but only a few are used
+- Need array indices for a Fenwick or segment tree
+- Only comparisons and ranks matter, or original gaps can be stored separately
 
 Core Idea:
 
-Replace sparse values with dense ranks while preserving equality and order. This makes array-indexed data structures practical without changing comparison-based relationships.
+Sort the distinct coordinates and replace each with its position in that order. This preserves order and equality, but not physical distances or gaps.
 
 Prerequisites:
 
@@ -1200,16 +1149,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Grid movement
-- Spiral or diagonal order
-- Rotate or reshape matrix
-- Direction changes
-- Layer boundaries
-- Simulate movement rules
+- Visit cells in spiral or diagonal order
+- Simulate turns or movement on a grid
+- Rotate, reshape, or process matrix layers
 
 Core Idea:
 
-Model positions explicitly as row-column coordinates and centralize movement in direction vectors or shrinking boundaries. For transformations, reason by layers or coordinate mappings while preserving unprocessed cells.
+Track the current row, column, and movement rule explicitly. Use direction steps for movement and shrinking boundaries or layers for spiral traversal and rotation.
 
 Prerequisites:
 
@@ -1277,16 +1223,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Sorted sequence
-- Pair sum
-- Compare both ends
-- Palindrome check
-- Shrink search space
-- Symmetric positions
+- Find a pair in sorted input
+- Compare characters from both ends
+- Discarding one endpoint can be justified from the current comparison
 
 Core Idea:
 
-Place pointers at opposite ends and use order or symmetry to discard at least one endpoint after every comparison. The invariant guarantees that discarded candidates cannot improve the answer.
+Start two pointers at opposite ends. Use sorted order or a matching rule to decide which end can be safely discarded; the movement rule depends on the problem.
 
 Prerequisites:
 
@@ -1353,16 +1296,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Stable compaction
-- Read and write indices
-- Subsequence matching
-- Merge two ordered streams
-- Remove elements in place
-- Trailing boundary
+- Remove values in place while preserving order
+- Compact nonzero or distinct values at the front
+- Check whether one sequence appears in another in the same order
 
 Core Idea:
 
-Move both pointers forward, letting one scan new input while the other tracks a write position, match position, or valid boundary. Each element is processed only a constant number of times.
+Move a reading pointer forward while another pointer tracks where to write or what to match next. Keep the already processed part valid as both advance.
 
 Prerequisites:
 
@@ -1424,16 +1364,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Cycle detection
-- Linked-list midpoint
-- Constant extra space
-- Repeated state transition
-- Nth node from the end
-- Runner technique
+- A linked list may contain a cycle
+- Repeated value-to-index jumps form a hidden cycle
+- Need a midpoint without first counting all nodes
 
 Core Idea:
 
-Advance two pointers at different speeds or with a fixed gap. Their meeting point, separation, or relative position reveals cycles, midpoints, and delayed targets without extra storage.
+Follow the same next-step rule with one slow and one fast pointer. Different speeds reveal a cycle or midpoint; a fixed gap is a related technique for positions measured from the end.
 
 Prerequisites:
 
@@ -1495,15 +1432,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Palindromic substring
-- Symmetry around a center
-- Odd and even centers
-- Mismatch near the middle
-- Enumerate maximal palindromes
+- Need a palindromic substring rather than a subsequence
+- A substring grows by matching both ends
+- Input size allows checking every center
 
 Core Idea:
 
-Treat every character and every gap as a possible center, then expand symmetrically while the endpoints match. This enumerates all palindromic substrings in quadratic time and constant auxiliary space.
+Try every character and every gap as a palindrome center. Move outward while both sides match, checking odd and even lengths; this approach is quadratic in the worst case.
 
 Prerequisites:
 
@@ -1559,16 +1494,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Three value classes
-- Less than, equal to, greater than
-- In-place partition
-- Unsorted middle region
-- Duplicate-heavy pivot
-- Constant extra space
+- Only three value classes such as 0, 1, and 2
+- Need an in-place partition around a pivot
+- The unclassified region shrinks after each decision
 
 Core Idea:
 
-Maintain disjoint regions for values below, equal to, and above a pivot while shrinking the unclassified region. Every swap preserves the region invariant and classifies at least one element.
+Keep regions for small, equal, large, and not-yet-classified values. Move each unknown value to its region; after a swap from the right, inspect the arriving value before advancing.
 
 Prerequisites:
 
@@ -1624,15 +1556,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Contiguous block of size k
-- Every substring of fixed length
-- Rolling sum or count
-- Add right, remove left
-- Fixed-size frequency comparison
+- Every candidate has the same length
+- Need a rolling sum or character count
+- Repeatedly recomputing each fixed-size block is too slow
 
 Core Idea:
 
-Build the first window, then slide it one position at a time by adding the entering element and removing the leaving element. This converts repeated range work into a linear scan.
+Keep exactly k consecutive items. Add the incoming item and remove the outgoing item as the window moves; record an answer only after a full window exists.
 
 Prerequisites:
 
@@ -1699,16 +1629,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Longest or shortest valid subarray
-- At most or at least k
-- Contiguous range constraint
-- Positive values
-- Expand right, shrink left
-- Monotone window validity
+- Need the longest or shortest consecutive section
+- Counts or positive sums give a predictable shrinking rule
+- Items can enter on the right and leave on the left without revisiting them
 
 Core Idea:
 
-Expand the right boundary to gain elements and advance the left boundary whenever validity can be restored monotonically. Each boundary moves forward at most once per index, yielding linear time.
+Keep a consecutive section and move its right end to add items. Move its left end when needed: shrink until valid for longest-window problems, or record and shrink while valid for shortest-window problems. This needs a rule that supports one-way boundary movement.
 
 Prerequisites:
 
@@ -1778,16 +1705,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Window minimum or maximum
-- Expire old candidates
-- Dominated values
-- Shortest prefix-difference range
-- DP over a bounded previous range
-- Deque optimization
+- Need a maximum or minimum in every moving window
+- Older candidates expire
+- A newer candidate can be proved at least as useful as an older one
 
 Core Idea:
 
-Keep candidate indices in a deque ordered by value and discard candidates that expire or can never be optimal. Each index enters and leaves the deque at most once.
+Keep candidate indices in a deque. Remove expired candidates at the front and candidates made useless by a newer value at the back; the front then gives the current best candidate.
 
 Prerequisites:
 
@@ -1847,16 +1771,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Order can simplify relationships
-- Adjacent values after sorting
-- Group equal keys
-- Deduplicate or rank
-- Global order, local comparison
-- Offline processing allowed
+- Equal or related values should be grouped
+- Comparing neighbors would solve the problem after sorting
+- Reordering input is allowed or can be done on a copy
 
 Core Idea:
 
-Sort once so related values become adjacent or appear in a useful global order, then solve the transformed problem with a linear scan. The added ordering often replaces hashing or nested comparisons.
+Sort the items so useful relationships become visible between neighbors or in a single pass. Include the sorting cost and keep original indices if the answer needs them.
 
 Prerequisites:
 
@@ -1920,16 +1841,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Choose in a strategic order
-- Earliest finish
-- Largest capacity or benefit first
-- Exchange argument
-- Rearrangement is allowed
-- Keep maximum future flexibility
+- Need to select non-overlapping tasks or make ordered assignments
+- An early finish or suitable size leaves more options
+- Reordering is allowed and the greedy rule can be justified
 
 Core Idea:
 
-Sort by the attribute that exposes a safe local choice, then commit greedily in that order. Correctness usually follows from exchanging the first differing choice with the greedy one.
+Choose a sort order that exposes a safe greedy decision, then process items in that order. The sort key needs a correctness argument, such as preserving more room for future choices.
 
 Prerequisites:
 
@@ -1996,16 +1914,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Count inversions
-- Count smaller elements across positions
-- Pair inequality across halves
-- Original order matters
-- Offline range counting
-- Divide, count, and merge
+- Count inversions or smaller values to the right
+- A pair must satisfy both an index order and a value comparison
+- Sorted halves make cross-pair counting faster
 
 Core Idea:
 
-Divide by original index, count valid cross-half pairs while both halves are sorted, and merge them. Sorting inside the recursion reduces quadratic pair counting to logarithmic levels.
+Split the input by original position, sort both halves, and count qualifying cross-half pairs before merging. Two moving boundaries can replace checking every pair separately.
 
 Prerequisites:
 
@@ -2066,16 +1981,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Kth smallest or largest
-- Unsorted order statistic
-- Top k without full sorting
-- Median or quantile
-- Partition around a pivot
-- Expected linear time
+- Need kth smallest or largest in unsorted input
+- Do not need the entire array sorted
+- Partitioning or mutating the input is acceptable
 
 Core Idea:
 
-Partition elements around a pivot and recurse only into the region containing the desired rank. Randomization gives expected linear time without fully sorting the input.
+Partition around a pivot, then continue only on the side containing the requested rank. Random pivots give expected linear time, but ordinary quickselect can still take quadratic time in the worst case.
 
 Prerequisites:
 
@@ -2137,16 +2049,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Geometric or interval events
-- Active intervals
-- Starts and ends
-- Coverage over a line
-- Overlap count
-- Area or skyline
+- Count overlapping intervals
+- Compute a skyline, covered length, or area
+- The answer changes only at object boundaries
 
 Core Idea:
 
-Convert objects into ordered boundary events and sweep across one coordinate while maintaining the active set. Process equal-coordinate events with deliberate tie rules to preserve inclusivity and geometry.
+Turn starts, ends, or geometric boundaries into ordered events. Move across them while updating what is currently active; decide carefully how events at the same coordinate are ordered.
 
 Prerequisites:
 
@@ -2211,16 +2120,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Chronological simulation
-- Arrival and completion times
-- Resource availability
-- Tie-breaking at equal timestamps
-- Process next event
-- Online state updates
+- Tasks arrive and finish at different times
+- Resources become available after earlier work ends
+- Equal-time events need explicit tie-breaking
 
 Core Idea:
 
-Represent state changes as timestamped events and process them in a deterministic order, often with heaps for pending work and available resources. Jump directly to the next relevant time instead of simulating every time unit.
+Process arrivals, completions, and other changes in time order. Keep pending events or available resources in suitable queues or heaps, and jump over times when nothing happens.
 
 Prerequisites:
 
@@ -2280,16 +2186,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Sorted search space
-- Target lookup
-- Halve the interval
-- Monotonic ordering
-- Rotated sorted array
-- Peak or matrix search
+- Find an exact value in sorted data
+- Random access to the middle is cheap
+- Each comparison can rule out half the remaining positions
 
 Core Idea:
 
-Maintain a search interval known to contain any possible answer and discard half after each comparison. Choose one interval convention and update rules that guarantee progress and preserve the invariant.
+In sorted input, compare the middle value with the target and discard the half that cannot contain it. Use one boundary convention consistently so every step makes progress.
 
 Prerequisites:
 
@@ -2356,16 +2259,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- First value at least target
-- First true position
-- Leftmost occurrence
-- Sorted insertion point
-- Count values below target
-- Patience sorting position
+- Need the leftmost matching value
+- Need an insertion position before equal values
+- Count how many sorted values are below a threshold
 
 Core Idea:
 
-Find the first index whose value or predicate is at least the target or true. Maintain a half-open interval so the final boundary is also a valid insertion position when no equal value exists.
+Find the first position whose value is at least the target. Keep moving the boundary left on equality; the result can be the position just after the array.
 
 Prerequisites:
 
@@ -2429,16 +2329,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- First value greater than target
-- Last value at most target
-- Rightmost occurrence
-- Count values at most target
-- Floor or predecessor
-- Jump after a matched occurrence
+- Need the boundary after repeated equal values
+- Count sorted values at most a threshold
+- Find the last value at or below a limit
 
 Core Idea:
 
-Find the first position strictly greater than a target; the preceding position is the last value at most that target. Combining lower and upper bounds gives exact frequency and closed-range counts.
+Find the first position whose value is greater than the target. Move past equality; subtract one for a possible last matching position, then check it before using it.
 
 Prerequisites:
 
@@ -2502,16 +2399,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Minimize the maximum
-- Maximize the minimum
-- Smallest feasible capacity
-- Largest feasible threshold
-- Monotone feasibility
-- Numeric answer range
+- Smallest workable speed, capacity, or time
+- Largest minimum distance that can be achieved
+- A candidate answer is easier to check than to construct directly
 
 Core Idea:
 
-Turn optimization into a yes/no feasibility test whose truth changes once across the answer range. Binary-search that transition and return the first or last feasible value.
+Guess a candidate answer and test whether it is feasible. If feasibility changes in only one direction as the guess increases, search for the first or last feasible value; include the test cost in the runtime.
 
 Prerequisites:
 
@@ -2579,16 +2473,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Optimization-to-decision reduction
-- Monotone decision oracle
-- Continuous answer
-- Precision tolerance
-- Bottleneck threshold
-- Count values below a parameter
+- Need an approximate numeric answer
+- Feasibility changes only once as a threshold changes
+- The cost lies mainly in checking each candidate parameter
 
 Core Idea:
 
-Parameterize the objective by a candidate value and ask whether a problem-specific oracle can achieve it. Search the monotone parameter space, using exact boundaries for discrete values or controlled iterations for real values.
+Express the objective as a parameter and build a monotonic yes/no test. Search its transition; integer parameters need exact boundary rules, while real-valued parameters need a justified precision or iteration limit.
 
 Prerequisites:
 
@@ -2659,15 +2550,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Most recent unresolved item
-- Undo or backspace
-- Adjacent cancellation
-- Nested operations
-- Collision simulation
+- An operation affects the most recent item
+- Adjacent values cancel or merge
+- Need backspace, undo, or collision simulation
 
 Core Idea:
 
-Store unresolved items on a stack; each new item either combines with, cancels, or is pushed after the current top.
+Keep unresolved items in a stack. Compare each new item with the most recent unresolved item, then push, combine, cancel, or pop according to the rule.
 
 Prerequisites:
 
@@ -2729,15 +2618,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Balanced delimiters
-- Nested scopes
-- Minimum insertions or removals
-- Matching open and close tokens
-- Nesting depth
+- Check nested brackets or scopes
+- Need to identify unmatched opening or closing symbols
+- Count insertions, removals, or nesting depth
 
 Core Idea:
 
-Track unmatched opening delimiters and validate each closing delimiter against the latest compatible opener. For one delimiter type, a balance counter may replace the stack.
+Keep unmatched opening brackets in a stack. Each closing bracket must match the latest opener; for a single bracket type, a balance counter may be enough.
 
 Prerequisites:
 
@@ -2800,15 +2687,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Operators and operands
-- Precedence
-- Nested expressions
-- Postfix or infix notation
-- Parser state
+- An expression contains operators and parentheses
+- Multiplication must happen before addition
+- Input is postfix notation or follows a small expression grammar
 
 Core Idea:
 
-Separate values from operators and reduce operations when precedence or closing delimiters permit. Recursive descent is the equivalent choice when the grammar has nested structure.
+Keep track of values and operators, applying operations in the required precedence order. Use stacks or recursive parsing to handle parentheses and nested expressions.
 
 Prerequisites:
 
@@ -2871,15 +2756,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Previous smaller element
-- Next smaller element
-- Remove digits greedily
-- Minimum contribution
-- Increasing subsequence of candidates
+- Find previous or next smaller values
+- Count each value's contribution as a subarray minimum
+- Remove larger earlier digits while preserving order
 
 Core Idea:
 
-Maintain candidates in nondecreasing order, popping larger elements when a smaller value proves they can no longer be optimal or determines their boundary.
+Keep candidate indices in increasing value order. When a smaller value arrives, pop larger candidates whose next-smaller boundary or usefulness is now decided; equal values need a deliberate tie rule.
 
 Prerequisites:
 
@@ -2938,15 +2821,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Previous greater element
-- Next greater element
-- Waiting until a larger value
-- Visibility to the right
-- Span or unresolved indices
+- Find the next warmer day or larger value
+- Measure a span bounded by a greater value
+- Earlier candidates wait for a larger item
 
 Core Idea:
 
-Keep unresolved candidates in nonincreasing order; a larger incoming value resolves every smaller top and exposes its next-greater boundary.
+Keep candidate indices in decreasing value order. When a larger value arrives, pop smaller candidates whose next-greater answer is now known; decide explicitly how to handle equal values.
 
 Prerequisites:
 
@@ -3009,15 +2890,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Largest rectangle
-- Nearest smaller boundaries
-- Width times limiting height
-- Binary matrix rows
-- Subarray minimum as bottleneck
+- Largest rectangle under a histogram
+- Largest all-one rectangle in a matrix
+- Rectangle width is limited by the nearest smaller heights
 
 Core Idea:
 
-Treat each value as the limiting height of its maximal span, found with nearest-smaller boundaries. Convert each matrix row into a histogram when solving rectangular binary-grid variants.
+Treat each histogram bar as the shortest bar of a possible rectangle. Find how far it can extend before a smaller bar blocks it; for a binary matrix, build a histogram of consecutive ones for each row.
 
 Prerequisites:
 
@@ -3073,15 +2952,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- K largest or smallest
-- Top K frequent
-- Streaming rank
-- Best K candidates
-- Bounded priority queue
+- Need k largest, smallest, or most frequent items
+- Values arrive as a stream
+- Sorting all candidates would do unnecessary work
 
 Core Idea:
 
-Maintain only the best k candidates in a heap whose root is the easiest retained item to evict. This reduces full sorting to roughly O(n log k).
+Keep only the best k candidates in a heap. Put the weakest retained candidate at the root so a better incoming item can replace it cheaply.
 
 Prerequisites:
 
@@ -3145,15 +3022,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Online median
-- Lower and upper halves
-- Dynamic rank boundary
-- Rebalancing partitions
-- Sliding order statistic
+- Need a median while values arrive
+- Need to maintain a changing rank boundary
+- Can keep two ordered groups balanced after updates
 
 Core Idea:
 
-Split values across a max-heap for the lower partition and a min-heap for the upper partition, then rebalance sizes and boundary order after every update.
+Split values into a lower half and an upper half. Keep a max-heap for the lower half and a min-heap for the upper half, balancing their sizes so the middle values stay available.
 
 Prerequisites:
 
@@ -3204,15 +3079,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Multiple sorted sequences
-- Globally next smallest
-- Sorted rows or lists
-- Kth value across streams
-- Frontier expansion
+- Merge several already sorted lists or streams
+- Need the next smallest item across sorted sources
+- Need only an early prefix or kth merged value
 
 Core Idea:
 
-Place the current frontier of each sorted source in a heap, repeatedly extract the global next item, and advance only its source.
+Put the next available item from each sorted source in a heap. Remove the smallest item, then add only the next item from the source it came from.
 
 Prerequisites:
 
@@ -3274,15 +3147,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Next available task
-- Deadlines or cooldowns
-- Limited resources
-- Earliest finishing job
-- Dynamic priorities
+- Choose the next available server or task
+- Release times, deadlines, or cooldowns matter
+- The best eligible choice changes as events occur
 
 Core Idea:
 
-Sort tasks by release time or deadline and use a heap to select the best currently feasible task, server, or resource at each decision point.
+Use a heap to choose among tasks or resources that are currently available. Process release or completion times in order, and encode the problem's exact priority and tie rules.
 
 Prerequisites:
 
@@ -3347,15 +3218,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Heap lacks arbitrary deletion
-- Stale entries
-- Sliding-window extrema
-- Mutable priorities
-- Versioned records
+- Priorities change after insertion
+- Items leave a moving window
+- Need deletion that the heap interface does not support directly
 
 Core Idea:
 
-Leave obsolete entries in the heap and record their invalidation separately. Discard stale roots only when they reach the top, preserving logarithmic updates.
+When a heap entry becomes outdated, mark it invalid elsewhere instead of searching the heap to remove it. Skip stale entries when they reach the top; periodic cleanup may be needed if stale entries accumulate.
 
 Prerequisites:
 
@@ -3409,15 +3278,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Head may change
-- Delete first node
-- Uniform splice logic
-- Build an output list
-- Predecessor required
+- The head can be inserted, deleted, or replaced
+- Building a result list needs a stable starting point
+- Repeated special handling for the first node complicates the code
 
 Core Idea:
 
-Attach a sentinel before the real head so insertions, deletions, and splices at the front use the same predecessor logic as internal nodes.
+Place a temporary node before the real list head. This gives every real node a predecessor, so changing the first node uses the same logic as changing a later one.
 
 Prerequisites:
 
@@ -3475,15 +3342,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Reverse pointer direction
-- Process from the end
-- Reorder halves
-- In-place list transformation
-- Previous-current-next pointers
+- Reverse a list or part of it
+- Reorder a list using a reversed second half
+- Need to change links in place without losing the remaining nodes
 
 Core Idea:
 
-Walk the list while redirecting each next pointer toward the processed prefix, preserving the unprocessed suffix before every mutation.
+Before changing a node's next link, save the next node. Reverse the link toward the processed part, then advance until the required list or segment is reversed.
 
 Prerequisites:
 
@@ -3541,15 +3406,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Fixed-size node blocks
-- Reverse each segment
-- Preserve group boundaries
-- Reconnect sublists
-- Partial final group
+- Reverse linked-list nodes in fixed-size groups
+- Need to reconnect several reversed segments
+- The final group may be shorter than k
 
 Core Idea:
 
-Locate a complete group, reverse exactly that node range, and reconnect its old head and new head to the neighboring segments without losing the suffix.
+Check that the next k nodes exist, reverse that group, and reconnect it to the previous and remaining groups. Leave a shorter final group unchanged when the problem requires it.
 
 Prerequisites:
 
@@ -3607,15 +3470,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Middle node
-- Nth node from end
-- Split into halves
-- Fixed pointer gap
-- Repeated-state trajectory
+- Split a list into halves
+- Find the middle in one pass
+- Find the nth node from the end without first counting nodes
 
 Core Idea:
 
-Advance pointers at different speeds or with a fixed gap so their relative positions reveal a midpoint, suffix position, or repeated state in one pass.
+Use a one-step and two-step pointer to locate the middle, or keep a fixed gap to locate a node relative to the end. Choose the starting positions to match the required middle or predecessor.
 
 Prerequisites:
 
@@ -3669,15 +3530,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Sorted linked lists
-- Choose smaller head
-- Build merged output
-- Parallel traversal
-- Merge-sort combine step
+- Merge already sorted linked lists
+- Need to reuse nodes instead of copying values
+- Combining sorted halves during list merge sort
 
 Core Idea:
 
-Compare the current nodes of sorted inputs, append the smaller candidate to a shared tail, and advance only its source.
+Compare the current nodes of sorted lists and link the smaller one to the output tail. Advance only that list, then attach the remaining suffix when one input ends.
 
 Prerequisites:
 
@@ -3735,15 +3594,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Repeated state
-- Functional graph
-- Cycle entry
-- Constant extra space
-- Pointer trajectories meet
+- A list may never reach null
+- Need to detect a cycle without a visited set
+- Need the node where a cycle begins
 
 Core Idea:
 
-Move one pointer one step and another two steps; they meet exactly when a reachable cycle exists. Resetting one pointer to the start then reveals the cycle entry.
+Move one pointer one link and another two links until they meet or reach the end. A meeting proves a reachable cycle; moving one pointer back to the head then finds the entry by equal-speed steps.
 
 Prerequisites:
 
@@ -3797,15 +3654,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Sort linked list
-- Split at midpoint
-- Merge sorted halves
-- O(1) auxiliary node storage
-- Stable ordering
+- Need to sort a linked list efficiently
+- Array-style random indexing is unavailable
+- A stable sort can be built from sorted-list merging
 
 Core Idea:
 
-Split the list at its midpoint, recursively sort both halves, and merge them by relinking nodes. Bottom-up merging removes recursion-stack overhead.
+Split the list into two halves, sort each half, and merge the sorted lists by relinking nodes. Recursive merge sort uses a logarithmic call stack; bottom-up merging can avoid that stack.
 
 Prerequisites:
 
@@ -3863,15 +3718,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Overlapping ranges
-- Union of intervals
-- Insert a range
-- Covered segments
-- Disjoint interval output
+- Combine overlapping ranges
+- Insert a range into an already merged list
+- Need the union as disjoint intervals
 
 Core Idea:
 
-Sort intervals by start, then extend the current merged interval while overlap continues and emit it when a gap begins.
+Sort intervals by their start. Extend the current interval while the next one overlaps; when a gap appears, save the current result and start another. Check whether touching endpoints count as overlap.
 
 Prerequisites:
 
@@ -3933,15 +3786,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Maximum non-overlapping intervals
-- Minimum removals
-- Earliest finishing time
-- Weighted jobs
-- Cover a target range
+- Select as many compatible intervals as possible
+- Remove the fewest intervals to eliminate overlap
+- Intervals have equal value and an early finish preserves future choices
 
 Core Idea:
 
-For unweighted selection, choosing the feasible interval with the earliest finish preserves the most future options. Weighted or capacity-limited variants add dynamic programming or a heap.
+For the maximum number of unweighted non-overlapping intervals, repeatedly choose the one that finishes earliest. Weighted jobs need DP or another method, not this same greedy rule.
 
 Prerequisites:
 
@@ -4003,15 +3854,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Minimum rooms or groups
-- Maximum simultaneous intervals
-- Allocate reusable resources
-- Calendar overlap count
-- Start and end events
+- Minimum meeting rooms or parallel groups
+- Resources can be reused after an interval ends
+- Need the maximum number of concurrent intervals
 
 Core Idea:
 
-Process intervals by start time and reuse the resource with the earliest finish whenever possible. Equivalently, the required resource count is the maximum number of concurrent intervals.
+Process intervals by start time. Reuse a resource when its previous interval has ended; otherwise allocate another. The minimum resource count equals the largest simultaneous overlap.
 
 Prerequisites:
 
@@ -4070,15 +3919,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Locally optimal ordering
-- Swap adjacent decisions
-- Canonical sorted order
-- Irrevocable choices
-- Greedy proof required
+- A local rule seems plausible but needs proof
+- Two neighboring choices can be exchanged
+- Need to show that some optimal solution begins with the greedy choice
 
 Core Idea:
 
-Show that replacing the first deviation from a greedy choice with the greedy choice cannot worsen an optimal solution. Repeating the exchange transforms some optimum into the greedy construction.
+To justify a greedy rule, take an optimal solution that differs from it and show that replacing the first differing choice cannot make the result worse.
 
 Prerequisites:
 
@@ -4141,15 +3988,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Revise an earlier choice
-- Keep best feasible subset
-- Sorted arrivals with dynamic selection
-- Drop worst selected item
-- Resource allocation by priority
+- Need the best feasible subset rather than every item
+- An earlier choice may need to be replaced
+- The worst chosen duration, cost, or benefit must be found quickly
 
 Core Idea:
 
-Process candidates in a greedy order while a heap records chosen items, enabling the worst current choice to be replaced when feasibility or value improves.
+Combine a greedy processing order with a heap of choices. When constraints are exceeded or a better candidate appears, the heap identifies which current choice to remove or replace.
 
 Prerequisites:
 
@@ -4214,15 +4059,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Farthest reachable boundary
-- Cover a continuous target
-- Minimum jumps or segments
-- Extend current frontier
-- Detect an unreachable gap
+- Minimum jumps to an endpoint
+- Cover a continuous target with few segments
+- Need to detect an unreachable gap
 
 Core Idea:
 
-Maintain the farthest boundary reachable with the decisions already committed, scanning all candidates available before that boundary to choose the next maximal extension.
+Track the farthest boundary reachable with the choices made so far. Among options starting before that boundary, choose the one extending it farthest; detect a gap when no option extends reach.
 
 Prerequisites:
 
@@ -4283,15 +4126,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Subtree recursion
-- Preorder, inorder, or postorder
-- Parent-child aggregation
-- Visit every node
-- Recursive tree structure
+- A result depends on child subtrees
+- Need preorder, inorder, or postorder traversal
+- Depth or ancestor information belongs on the current path
 
 Core Idea:
 
-Define what a recursive call receives and returns for one subtree, then combine child results at the correct preorder, inorder, or postorder moment.
+Explore one child subtree fully before moving to the next. Decide what each call receives and returns, and whether to act before the children, between them, or after them.
 
 Prerequisites:
 
@@ -4357,15 +4198,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Level order
-- Nearest depth
-- Per-level aggregation
-- Right or left view
-- Sibling processing
+- Need level order or the nearest leaf
+- Compute a maximum, average, or view for each level
+- Nodes at equal depth should be processed together
 
 Core Idea:
 
-Use a queue to process nodes in nondecreasing depth, usually freezing the current queue size to isolate one level at a time.
+Use a queue to visit the tree one depth at a time. Process the current queue length as one level before adding the next level's results.
 
 Prerequisites:
 
@@ -4427,15 +4266,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Ordered binary tree
-- Inorder is sorted
-- Rank or successor query
-- Search, insert, or delete
-- Range pruning
+- Input is explicitly a binary search tree
+- Need successor, rank, or a value range
+- A comparison with the current key can discard one subtree
 
 Core Idea:
 
-Exploit the invariant that every left-subtree key is smaller and every right-subtree key is larger, enabling ordered search and sorted inorder traversal.
+Use the rule that left-subtree keys come before the node and right-subtree keys come after it. This enables ordered search and sorted inorder traversal; duplicate handling depends on the tree's definition.
 
 Prerequisites:
 
@@ -4504,15 +4341,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Traversal arrays
-- Reconstruct a tree
-- Root partitions input
-- Build balanced tree
-- Recursive range boundaries
+- Rebuild a tree from traversals
+- Construct a balanced tree from sorted values
+- A root divides an input range into smaller ranges
 
 Core Idea:
 
-Choose the root from the representation, partition the remaining data into left and right subproblems, and recursively construct both children.
+Identify the root from the input representation, split the remaining data into child subproblems, and build each recursively. Traversal reconstruction needs enough information; duplicates or a single traversal may make it ambiguous.
 
 Prerequisites:
 
@@ -4578,15 +4413,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Root-to-leaf constraint
-- Running sum or number
-- Ancestor-dependent state
-- Collect paths
-- Backtrack on return
+- Root-to-leaf sums or numbers
+- Need to list paths satisfying a rule
+- A node's answer depends on its ancestors
 
 Core Idea:
 
-Carry the state accumulated from the root into each child and evaluate it at the relevant leaf or node. Restore mutable path state when recursion returns.
+Carry a running value or path from the root into each child. Check it at the required node or leaf, and undo changes to a shared path list when returning.
 
 Prerequisites:
 
@@ -4649,15 +4482,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Optimize over subtrees
-- Include or exclude node
-- Combine child states
-- Rerooting
-- Return multiple values
+- Choose nodes under parent-child restrictions
+- Best answer combines independent child subtrees
+- Need an answer for every possible root
 
 Core Idea:
 
-Define a compact state for each subtree and combine child states in postorder. When every node must become the root of an answer, propagate complementary information with rerooting.
+For each subtree, return the few results its parent needs, such as taking or skipping the root. Combine child results after visiting them; rerooting adds a pass for answers viewed from every root.
 
 Prerequisites:
 
@@ -4724,15 +4555,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Longest path in a tree
-- Path through a node
-- Two deepest branches
-- Farthest pair
-- Tree center
+- Find the farthest pair of nodes in a tree
+- Longest path may pass through a branching node
+- Need the tree diameter or center
 
 Core Idea:
 
-At each node, combine its two best downward paths to form a path through that node while returning only the best single downward path to its parent.
+For an unweighted tree, combine the two longest downward paths at each node to consider a path through it. Return only the longest downward path to its parent and keep the best full path separately.
 
 Prerequisites:
 
@@ -4793,15 +4622,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Shared ancestor
-- Path between two nodes
-- Repeated ancestor queries
-- Kth ancestor
-- Distance queries on a tree
+- Find where two root-to-node paths meet
+- Compute distances or paths between tree nodes
+- Many ancestor queries reuse the same tree
 
 Core Idea:
 
-For one query, return the first node whose subtrees collectively contain both targets. For many queries, preprocess jump pointers or an Euler representation to answer ancestors efficiently.
+Find the deepest node that is an ancestor of both targets. One query can use a recursive search; many queries justify preprocessing ancestor jumps or a traversal-based index.
 
 Prerequisites:
 
@@ -4863,15 +4690,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Encode and rebuild a tree
-- Preserve null structure
-- Canonical subtree signature
-- Stream of traversal tokens
-- Duplicate subtrees
+- Save and restore a tree
+- Compare subtree shapes and values
+- Need a deterministic signature for repeated subtrees
 
 Core Idea:
 
-Encode both values and structural boundaries in a deterministic traversal so decoding can reconstruct the same tree. Canonical encodings also turn structural equality into signature equality.
+Write both node values and enough structure information to rebuild the same tree. A traversal with explicit null markers is one option; values alone are generally insufficient.
 
 Prerequisites:
 
@@ -4930,15 +4755,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- O(1) traversal space
-- Temporary tree threads
-- Inorder predecessor
-- Restore tree structure
-- No stack or recursion
+- Need inorder traversal without a stack or recursion
+- Temporary pointer changes are permitted
+- Must restore the tree after visiting it
 
 Core Idea:
 
-Temporarily thread each node's inorder predecessor back to the node, using the second encounter to distinguish completed left subtrees. Remove every thread to restore the original tree.
+Traverse a binary tree using temporary links back from an inorder predecessor. Remove each temporary link after returning so the original tree is restored; input mutation must be allowed.
 
 Prerequisites:
 
@@ -4998,16 +4821,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Entities and relationships
-- Directed or undirected connections
-- Weighted edges
-- Implicit neighbors
-- Sparse versus dense graph
-- Reachability between objects
+- Objects are connected by relationships
+- Moves between configurations can be generated
+- Need to decide whether edges are directed or weighted
 
 Core Idea:
 
-Translate entities into vertices and relationships into edges, preserving direction, weight, and multiplicity. Choose an adjacency list, matrix, edge list, or implicit neighbor generator to match the graph’s density and operations.
+Turn objects into nodes and allowed relationships or moves into edges. Preserve direction and weight, then choose neighbor lists, a matrix, or on-demand neighbors to suit the graph.
 
 Prerequisites:
 
@@ -5073,16 +4893,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Reachability
-- Connected components
-- Explore entire region
-- Recursive traversal
-- Entry and exit states
-- Cycle detection
+- Need to find everything reachable from a node
+- Count connected regions
+- Explore a path deeply before returning
 
 Core Idea:
 
-Explore one path completely before backtracking, marking each vertex when first entered. DFS naturally exposes components, ancestry, cycles, and postorder dependencies.
+Explore one unvisited neighbor at a time and backtrack when none remain. Mark visited nodes to avoid repeating work; cycle detection needs extra state appropriate to directed or undirected edges.
 
 Prerequisites:
 
@@ -5149,16 +4966,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Minimum number of edges
-- Unweighted shortest path
-- Level-by-level exploration
-- Nearest target
-- Fewest moves
-- Uniform transition cost
+- Fewest moves or edges in an unweighted graph
+- Find the nearest reachable target
+- Need level-by-level exploration
 
 Core Idea:
 
-Explore vertices in nondecreasing distance from the source using a queue. The first visit to a state gives its shortest path when every transition has equal cost.
+Use a queue to explore all nodes one edge away before those two edges away. First discovery gives a shortest path only when every move has equal cost.
 
 Prerequisites:
 
@@ -5224,16 +5038,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Distance to nearest source
-- Simultaneous spread
-- Infection or fire
-- Multiple starting cells
-- Voronoi-like assignment
-- Reverse search from all targets
+- Several starting points act simultaneously
+- Find distance to the nearest zero, exit, or facility
+- Model equal-speed spread or infection
 
 Core Idea:
 
-Insert every source into the queue at distance zero, then run one BFS wave. This computes each state’s distance to its nearest source and correctly simulates simultaneous propagation.
+Start one BFS with every source already in the queue at distance zero. The expanding waves give each cell or node its distance to the nearest source.
 
 Prerequisites:
 
@@ -5292,16 +5103,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Fewest operations
-- Position plus extra state
-- Keys or resources
-- Bitmask of visited targets
-- Puzzle configuration
-- Implicit transition graph
+- A position can be revisited with different keys or resources
+- Need the fewest operations to reach a configuration
+- A puzzle state includes more than location
 
 Core Idea:
 
-Treat each complete configuration—not merely its position—as a vertex, then BFS across legal transitions. Include every history-dependent feature needed to determine future moves in the visited key.
+Treat the full situation as a graph node, not just its position. Store every feature affecting future moves in the visited key, then BFS for the fewest equal-cost moves.
 
 Prerequisites:
 
@@ -5364,16 +5172,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Prerequisites
-- Dependency order
-- Directed acyclic graph
-- Course scheduling
-- Indegree zero
-- Cycle in dependencies
+- Courses or tasks have prerequisites
+- Need a valid dependency order
+- Need to detect a directed cycle that blocks completion
 
 Core Idea:
 
-Order a directed graph so every prerequisite appears before its dependents. Failure to process all vertices proves that a directed cycle prevents a valid ordering.
+Order tasks so each prerequisite comes before the tasks that depend on it. Repeatedly process tasks with no remaining prerequisites; if some never become available, a cycle prevents a full ordering.
 
 Prerequisites:
 
@@ -5437,16 +5242,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Dynamic connectivity
-- Merge groups
-- Same component
-- Redundant edge
-- Equivalence relation
-- Offline connectivity queries
+- Connections are added over time
+- Need to merge accounts, regions, or equivalent items
+- Ask whether two elements belong to the same component
 
 Core Idea:
 
-Maintain a partition of elements under repeated unions and connectivity queries. Path compression and union by size or rank make the amortized operation cost effectively constant.
+Keep elements in groups, each with a representative. Merge groups and compare representatives to test connectivity; this handles additions well, but ordinary union-find cannot undo arbitrary edge deletions.
 
 Prerequisites:
 
@@ -5515,16 +5317,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Divide into two groups
-- Opposite-side constraints
-- Odd cycle
-- Two-color graph
-- Alternating edge types
-- Conflict graph
+- Split items into two groups with no within-group conflict
+- Every edge requires opposite assignments
+- Need to check whether a graph is bipartite
 
 Core Idea:
 
-Assign opposite colors across every edge using DFS or BFS; a same-color edge proves an odd cycle and makes the partition impossible. A valid bipartition also unlocks matching and minimum-vertex-cover reductions.
+Try assigning one of two colors to every node, giving neighbors opposite colors. A same-color edge is a conflict; for an undirected graph, this is equivalent to an odd cycle.
 
 Prerequisites:
 
@@ -5583,16 +5382,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Nonnegative edge weights
-- Minimum total cost
-- Earliest arrival
-- Weighted shortest path
-- Best-first expansion
-- Path bottleneck or probability
+- Shortest paths have nonnegative costs
+- Need minimum travel time or total cost
+- Choosing the nearest pending state can safely finalize it
 
 Core Idea:
 
-Repeatedly finalize the unsettled state with the smallest known distance and relax its outgoing edges. Nonnegative transition costs guarantee that a finalized distance cannot later improve.
+Repeatedly expand the node with the smallest known distance and improve its neighbors through that node. Standard Dijkstra requires nonnegative edge weights; skip outdated heap entries.
 
 Prerequisites:
 
@@ -5656,16 +5452,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Edge weights are zero or one
-- Free transition
-- Minimum modifications
-- Edge reversal cost
-- Deque shortest path
-- Binary transition cost
+- Moves are either free or cost one
+- Minimize changes or edge reversals
+- A graph has exactly two weights, zero and one
 
 Core Idea:
 
-Run Dijkstra’s greedy relaxation with a deque: push zero-cost transitions to the front and one-cost transitions to the back. This preserves nondecreasing distances in linear time.
+For edges costing only zero or one, use a deque: put improved zero-cost neighbors at the front and one-cost neighbors at the back. This keeps cheaper distances ahead without a heap.
 
 Prerequisites:
 
@@ -5719,16 +5512,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Negative edge weights
-- Bounded number of edges
-- Repeated relaxation
-- Negative-cycle detection
-- Cheapest path with stop limit
-- Layered shortest path
+- Negative edge weights are possible
+- Need to detect a reachable negative cycle
+- A path is limited to a fixed number of edges or stops
 
 Core Idea:
 
-Relax every edge repeatedly so shortest paths using progressively more edges become available. A further improvement after the required rounds reveals a reachable negative cycle.
+Repeatedly try improving distances through every edge. With no reachable negative cycle, n minus one full rounds suffice; a further improvement reveals one. For an edge-count limit, read the previous round's distances rather than reusing new ones immediately.
 
 Prerequisites:
 
@@ -5784,16 +5574,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- All-pairs shortest paths
-- Small dense graph
-- Transitive closure
-- Every source-to-target query
-- Intermediate vertices
-- Repeated path conversion
+- Many shortest-path queries between arbitrary pairs
+- The graph is small enough for a cubic-time method
+- Need all-pairs reachability or conversion costs
 
 Core Idea:
 
-Allow vertices as intermediates one by one, updating every pair through the newly permitted vertex. The same recurrence computes shortest paths, reachability closure, or other path-composable relations.
+Keep a table for every source-destination pair. Allow one more intermediate node at a time and check whether going through it shortens each route; initialize self-distances to zero.
 
 Prerequisites:
 
@@ -5851,16 +5638,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Connect all vertices
-- Minimum total edge cost
-- No cycles required
-- Critical connection cost
-- Kruskal or Prim
-- Minimax path in an undirected graph
+- Need to connect every location at minimum total cost
+- The objective is total network cost, not a route from one source
+- Cycles add unnecessary cost to the required connection structure
 
 Core Idea:
 
-Select the cheapest edges that connect every vertex without creating unnecessary cycles. Cut and cycle properties justify both Kruskal’s global edge ordering and Prim’s expanding frontier.
+Connect all vertices of an undirected weighted graph with the cheapest total edge cost and no cycles. Grow a tree with Prim or add cheapest safe edges with Kruskal; a disconnected graph gives a forest.
 
 Prerequisites:
 
@@ -5920,16 +5704,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Choose or skip
-- Power set
-- Every subsequence
-- Include or exclude
-- Duplicate subsets
-- Enumerate selections
+- Generate all possible selections
+- Item order does not change the answer
+- Need unique subsets when values repeat
 
 Core Idea:
 
-At each candidate, branch on whether to include it and backtrack after exploring that choice. Sorting and same-depth duplicate skipping produce unique subsets without global deduplication.
+Build subsets by choosing or skipping each item. Undo each choice after exploring it; for duplicate input values, skip equivalent choices at the same decision depth.
 
 Prerequisites:
 
@@ -5994,16 +5775,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Arrange every item
-- Ordering matters
-- Use each item once
-- Unique permutations
-- Choose unused candidate
-- Lexicographic arrangement
+- Generate arrangements where order matters
+- Each item can be used once
+- Need all unique permutations
 
 Core Idea:
 
-Build an ordering one position at a time, choosing among unused candidates and undoing each choice on return. Frequency maps or same-depth duplicate skipping avoid repeated permutations.
+Fill positions one at a time using items not yet chosen. Undo each placement after exploring it; repeated values need duplicate-skipping or frequency counts.
 
 Prerequisites:
 
@@ -6064,16 +5842,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Choose k items
-- Order does not matter
-- Target sum combinations
-- Generate valid constructions
-- Start index
-- Reusable candidates
+- Choose k items without caring about order
+- Find combinations reaching a target sum
+- Candidates may be single-use or reusable
 
 Core Idea:
 
-Extend a partial combination only with candidates at or after a controlled start index. Moving or retaining that index distinguishes single-use choices from reusable choices and prevents reordered duplicates.
+Build combinations using a start index so the same selection is not generated in different orders. Advance past a chosen item for single use, or keep its index when reuse is allowed.
 
 Prerequisites:
 
@@ -6135,16 +5910,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Satisfy all constraints
-- Assign variables
-- Small exponential search
-- Prune invalid prefix
-- Undo decisions
-- Exact arrangement
+- Small input permits exploring many assignments
+- Partial choices can already violate a rule
+- Need an exact arrangement such as a board or schedule
 
 Core Idea:
 
-Assign one decision at a time and immediately reject partial states that violate a constraint or cannot beat the current best. Strong variable ordering, candidate ordering, and bounds determine practical performance.
+Try one decision, check its constraints, and abandon the branch as soon as it cannot succeed. Undo the decision before trying another; bounds can also reject branches unable to beat the best answer.
 
 Prerequisites:
 
@@ -6208,16 +5980,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Explore grid paths
-- Cannot reuse a cell
-- Path-dependent visited state
-- Spell or collect along route
-- Undo cell marking
-- Four-direction choices
+- Spell a word or collect items along a grid path
+- The current path cannot reuse a cell
+- Future legal moves depend on the cells already used on that path
 
 Core Idea:
 
-Explore each legal neighboring cell, mark it for the current path, and unmark it when backtracking. Prune as soon as the path cannot satisfy the remaining target or improve the best result.
+Try a legal move to a neighboring cell, mark it as used by the current path, then undo that mark when returning. Path-specific marking lets other candidate paths reuse the cell later.
 
 Prerequisites:
 
@@ -6279,16 +6048,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Ways to reach position
-- Previous one or two states
-- Local recurrence
-- Constant-memory optimization
-- Tiling a strip
-- Short fixed-order recurrence
+- Ways to climb steps or tile a narrow strip
+- Each state depends on the previous one or two
+- A simple recurrence repeats the same smaller calculations
 
 Core Idea:
 
-Express the current answer from a constant number of immediately preceding states. Once the base cases are correct, a left-to-right recurrence can usually be compressed to constant space.
+Write the answer at a position using a few earlier answers, then compute in order from correct base cases. When only the last few answers matter, replace the full table with a few variables.
 
 Prerequisites:
 
@@ -6355,16 +6121,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Sequence positions
-- Best answer up to index
-- Decisions along a line
-- Previous few states
-- Skip or take
-- Prefix optimum
+- Choices follow a sequence
+- Need a best answer up to each position
+- The same earlier subproblem is used by several later choices
 
 Core Idea:
 
-Define a state for the optimal result on a prefix or ending at an index, then transition from earlier valid states. Iterate in dependency order and compress memory when only a bounded history is needed.
+Define what the best answer for a prefix or ending position means. Compute it from earlier states, choosing among valid transitions such as take, skip, or extend.
 
 Prerequisites:
 
@@ -6432,16 +6195,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Paths through a matrix
-- Move right or down
-- Cell depends on neighbors
-- Falling path
-- Two travelers
-- Obstacles and path counts
+- Count paths or minimize cost through a grid
+- Moves create an acyclic order such as right/down
+- Obstacles or budgets affect which transitions are allowed
 
 Core Idea:
 
-Treat each cell as a state whose dependencies are neighboring cells reached earlier in a valid traversal order. Expand the state when direction, resource, or multiple-agent information affects future moves.
+Store an answer for each cell and compute it from allowed earlier neighbors. Add state for any extra resource, direction, or second traveler that changes future choices.
 
 Prerequisites:
 
@@ -6506,16 +6266,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Use each item at most once
-- Capacity constraint
-- Choose a subset
-- Exact target sum
-- Maximize value
-- Boolean subset feasibility
+- Choose a subset under a weight or capacity limit
+- Each item is available at most once
+- Need exact subset-sum feasibility or maximum value
 
 Core Idea:
 
-For every item, choose between excluding it and consuming capacity once to include it. Iterate capacities backward in one-dimensional implementations so the same item cannot be reused.
+For each item, choose to take it once or skip it within the capacity limit. In a one-dimensional table, process capacities backward so the same item is not used again in that iteration.
 
 Prerequisites:
 
@@ -6578,16 +6335,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Reuse an item unlimited times
-- Repeated denomination
-- Build an exact total
-- Minimum pieces
-- Ordered constructions
-- Forward capacity iteration
+- Each item or denomination is available repeatedly
+- Build an exact amount or length
+- Need minimum pieces, maximum value, or a count of constructions
 
 Core Idea:
 
-Allow a choice to transition from a state updated during the same item’s iteration, enabling repeated use. Loop order determines whether the DP counts combinations, permutations, or merely optimizes value.
+Allow a chosen item to be used again when building a total. Forward capacity updates permit reuse; loop order must match whether order matters to the answer.
 
 Prerequisites:
 
@@ -6648,16 +6402,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Denominations
-- Make a target amount
-- Minimum number of choices
-- Count combinations
-- Count ordered sequences
-- Bounded multiplicities
+- Make an amount from denominations
+- Reuse coins or respect per-coin limits
+- Distinguish counting ways from minimizing the number used
 
 Core Idea:
 
-Define the amount as capacity and choose a recurrence matching the question: minimum coins, unordered combinations, ordered sequences, or bounded counts. The item/amount loop order is part of the state semantics.
+First decide whether the question asks for the fewest coins, unordered combinations, or ordered sequences. These use different recurrences or loop orders even though the state often tracks the amount.
 
 Prerequisites:
 
@@ -6719,16 +6470,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Longest ordered subsequence
-- Preserve original order
-- Strictly increasing chain
-- Nesting after sorting
-- Minimum removals for order
-- Patience sorting
+- Keep original order while selecting increasing values
+- Need minimum removals to obtain increasing order
+- A nesting problem can become increasing-subsequence search after careful sorting
 
 Core Idea:
 
-Track the smallest possible tail for an increasing subsequence of each length, replacing tails by lower bound. Use quadratic DP when counts, reconstruction, or richer compatibility transitions are required.
+For the longest strictly increasing subsequence, keep the smallest possible ending value for every length and replace the first ending value at least as large as the new item. This tails array gives the length, not necessarily the subsequence itself.
 
 Prerequisites:
 
@@ -6797,16 +6545,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Two sequences
-- Preserve relative order
-- Match or skip
-- Uncrossed connections
-- Longest shared pattern
-- Minimum deletions between strings
+- Find the longest sequence shared in the same relative order
+- Matches need not be consecutive
+- Insertions or deletions can be related to a shared subsequence
 
 Core Idea:
 
-For each pair of prefixes, either match equal final elements or skip one final element and keep the better result. The same alignment table supports reconstruction and many insertion/deletion reductions.
+Compare two prefixes. If their last elements match, extend the answer for the shorter prefixes; otherwise keep the better answer after skipping one last element.
 
 Prerequisites:
 
@@ -6869,16 +6614,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Convert one sequence to another
-- Insert delete replace
-- String alignment
-- Minimum modifications
-- Match prefixes
-- Wildcards or pattern tokens
+- Need minimum edits between strings
+- Operations can insert, remove, or replace characters
+- Each decision aligns prefixes of two sequences
 
 Core Idea:
 
-Define a state for transforming one prefix into another and transition by matching, inserting, deleting, or replacing the final symbol. Add dimensions when edits have budgets, modes, or compressed effects.
+Build a table for converting one prefix into another. Compare the costs of insert, delete, replace, or match; initialize empty-prefix cases explicitly.
 
 Prerequisites:
 
@@ -6946,16 +6688,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Solve a contiguous interval
-- Choose the first or last operation
-- Split at an internal point
-- Merge adjacent groups
-- Palindromic range
-- Matrix-chain structure
+- Operations join or remove neighboring groups
+- The first or last operation splits the remaining work
+- Need an optimal answer for every contiguous range
 
 Core Idea:
 
-Define the answer for every interval and transition by choosing a boundary action or split point. Process intervals from shorter to longer so all subinterval dependencies are already solved.
+Define an answer for each interval. Choose a split or an operation inside it, combine answers for smaller intervals, and process short intervals before long ones.
 
 Prerequisites:
 
@@ -7019,16 +6758,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Split sequence into segments
-- Exactly k groups
-- Cost per partition
-- Last cut position
-- Minimize maximum segment
-- Palindromic partitions
+- Split a sequence into consecutive groups
+- Exactly k parts are required
+- Each segment has its own cost or validity rule
 
 Core Idea:
 
-Let a state cover a prefix with a fixed number of completed groups, and enumerate the previous cut. Precompute segment costs and optimize the cut transition when monotonicity or convexity permits.
+Choose where the last segment begins, combine its cost with the best answer before it, and try all valid cuts. Add the number of groups to the state when it is constrained.
 
 Prerequisites:
 
@@ -7091,16 +6827,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Small set of modes
-- Buy sell hold cooldown
-- Valid transition sequence
-- Alternating choices
-- Consecutive-state restrictions
-- Position plus status
+- Only a few modes describe the relevant history
+- Buying and selling have restrictions
+- Certain consecutive actions are forbidden
 
 Core Idea:
 
-Represent each prefix by a small finite set of modes and update every mode through legal transitions. The state machine makes mutually exclusive histories explicit while keeping the state space constant per position.
+Keep a separate DP value for each allowed mode, such as holding stock, resting, or cooling down. Update modes through legal transitions using the previous step's values.
 
 Prerequisites:
 
@@ -7168,16 +6901,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Count integers in a range
-- Digit constraints
-- Upper-bound tightness
-- Leading zeros
-- Digit sum or frequency
-- Number contains forbidden pattern
+- Count integers in a large numeric range
+- Digits must satisfy a sum, repetition, or forbidden-pattern rule
+- Cannot enumerate every number individually
 
 Core Idea:
 
-Build numbers digit by digit while tracking whether the current prefix is tight to the bound, has started, and satisfies the required aggregate state. Compute a range answer as the difference between two prefix counts.
+Count numbers one digit at a time, tracking whether the prefix still matches the upper bound and whether meaningful digits have started. Include whatever digit information the rule needs; count a range by subtracting two bounded counts.
 
 Prerequisites:
 
@@ -7241,16 +6971,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Small set of items
-- Subset as state
-- Assign each item once
-- Visit all targets
-- Completed-task mask
-- Exponential but structured
+- Only a small number of items allows about 2^n states
+- Need to visit, assign, or group each item
+- Different choice orders lead to the same completed subset
 
 Core Idea:
 
-Encode the chosen or completed subset as an integer mask, then transition by adding, removing, or partitioning bits. This turns history-dependent subset choices into a finite state graph of size roughly 2ⁿ.
+Use the bits of an integer to record which items are already chosen or finished. Add another index or mode when the subset alone does not determine future choices.
 
 Prerequisites:
 
@@ -7318,16 +7045,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Random transitions
-- Event probability
-- Expected outcome
-- Repeated trials
-- Absorbing state
-- Distribution after steps
+- Repeated random moves or trials
+- Need the chance of ending in a target state
+- Need an expected cost or number of steps with clearly defined stopping states
 
 Core Idea:
 
-Store the probability or count distribution for each state and push mass through every random transition. Carefully define terminal states, normalization, and whether the recurrence computes probability, expectation, or favorable counts.
+Store the probability of each situation and distribute it through the next random outcomes. For expected values, write the expectation recurrence separately rather than treating it as an ordinary probability table.
 
 Prerequisites:
 
@@ -7384,16 +7108,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Two optimal players
-- Alternating turns
-- Winning or losing state
-- Score difference
-- Minimax
-- Take from interval
+- Two players alternate choices
+- The opponent chooses the best response
+- Need a guaranteed win or optimal final score
 
 Core Idea:
 
-Define each state from the current player’s perspective and assume the opponent responds optimally. Boolean games use winning/losing transitions, while score games often maximize the current score difference.
+Describe each state from the player whose turn it is. A winning move reaches a losing state for the opponent; score games often track the best score difference when both play optimally.
 
 Prerequisites:
 
@@ -7458,16 +7179,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Directed acyclic graph
-- Dependencies between states
-- Longest path in DAG
-- Count paths
-- Topological transition order
-- Memoized acyclic recursion
+- Count paths or find a longest path in a DAG
+- Tasks depend on completed prerequisite states
+- Sequence or grid DP generalizes to irregular directed connections
 
 Core Idea:
 
-Process states in topological order, or memoize DFS on an acyclic dependency graph, so every transition reads finalized predecessors. DAG DP generalizes sequence and grid DP to arbitrary partial orders.
+Compute each state after all the states it depends on. A directed acyclic graph provides a topological order; memoized recursion is another option when dependencies cannot cycle.
 
 Prerequisites:
 
@@ -7529,16 +7247,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Prefix lookup
-- Dictionary of strings
-- Autocomplete
-- Shared prefixes
-- Character-by-character search
-- Maximum XOR queries
+- Need prefix lookup or autocomplete
+- Many dictionary words share starting characters
+- Need to choose bits for maximum-XOR matching
 
 Core Idea:
 
-Store strings as paths through shared prefix nodes so insertion and lookup depend on key length rather than dictionary size. Binary tries apply the same idea to bits for XOR optimization.
+Store strings as paths of characters, sharing nodes for common prefixes. Follow a prefix once to reach all its possible completions; bit tries apply the same idea to binary digits.
 
 Prerequisites:
 
@@ -7600,15 +7315,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Exact pattern matching
-- Longest proper prefix and suffix
-- Overlapping matches
-- Repeated pattern
-- Linear-time substring search
+- Find exact pattern occurrences in a long text
+- Matches can overlap
+- Need deterministic linear-time matching for one pattern
 
 Core Idea:
 
-Precompute failure links from the pattern so a mismatch reuses the longest compatible prefix instead of restarting. This gives linear preprocessing and linear scanning.
+Precompute which shorter prefix of the pattern can still match after a mismatch. Fall back to that prefix instead of restarting and rechecking text characters already understood.
 
 Prerequisites:
 
@@ -7670,15 +7383,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Prefix match at every position
-- String borders
-- Prefix overlap
-- Pattern plus separator
-- Sum of prefix scores
+- Need prefix-match lengths at every position
+- Find repeated prefix/suffix borders
+- Pattern matching can use pattern + separator + text
 
 Core Idea:
 
-The Z-array records the longest prefix match beginning at every position. A maintained matching interval lets all values be computed in linear time.
+For each string position, record how many characters match the start of the string. Reuse a previously known matching interval rather than compare every prefix from scratch.
 
 Prerequisites:
 
@@ -7736,15 +7447,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Pattern matching
-- Fixed-length substrings
-- Many candidate matches
-- Hash fingerprints
-- Duplicate substring
+- Search fixed-length windows for a pattern
+- Many windows can be rejected by a short fingerprint
+- Hash collisions must be checked or accepted as a probabilistic trade-off
 
 Core Idea:
 
-Hash the pattern and update the text window’s hash in constant time as it slides. Verify hash matches or use multiple hashes when collisions cannot be tolerated.
+Slide a hash value over text windows of the pattern's length. A different hash rules a match out; an equal hash identifies a candidate that needs character verification for guaranteed correctness.
 
 Prerequisites:
 
@@ -7807,15 +7516,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Substring equality
-- Repeated substrings
-- Palindrome queries
-- Longest common substring
-- Deduplicate sequences
+- Many substring-equality comparisons
+- Find repeated or common substrings
+- Binary search needs a fast candidate-length check
 
 Core Idea:
 
-Represent substrings with prefix-based fingerprints so equal-length substring hashes are extracted in constant time. Use normalized powers, two moduli, or direct verification to control collisions.
+Precompute hash totals and powers so a substring's fingerprint can be obtained quickly. Equal hashes do not prove equal substrings; direct checking guarantees correctness, while multiple hashes only reduce collision risk.
 
 Prerequisites:
 
@@ -7877,15 +7584,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- All palindromic radii
-- Longest palindrome
-- Odd and even centers
-- Linear-time palindrome preprocessing
-- Palindrome range queries
+- Need palindrome lengths for all centers
+- Quadratic center expansion is too slow
+- Need linear-time palindrome preprocessing
 
 Core Idea:
 
-Reuse the mirror radius inside the rightmost known palindrome, expanding only beyond its boundary. A separator transformation can unify odd- and even-length palindromes.
+Track the farthest-reaching palindrome found so far. Reuse the known radius at a mirrored center, then compare characters only as needed beyond the known boundary; handle odd and even centers consistently.
 
 Prerequisites:
 
@@ -7938,15 +7643,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Many patterns in one text
-- Dictionary matching
-- Forbidden substrings
-- Streaming matches
-- Failure links on a trie
+- Search many dictionary patterns in one text
+- Need overlapping or streaming matches
+- Detect forbidden words or patterns efficiently
 
 Core Idea:
 
-Build a trie of all patterns and add failure links that preserve the longest suffix which is also a trie prefix. The resulting automaton reports all dictionary matches in one pass over the text.
+Build a trie of all patterns, then add fallback links to the longest suffix that is still a dictionary prefix. Follow these links while scanning text and report matching pattern endings, including suffix matches.
 
 Prerequisites:
 
@@ -8009,15 +7712,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Sorted suffixes
-- Longest repeated substring
-- Lexicographic substring order
-- Longest common prefix
-- Distinct substrings
+- Need lexicographic order of substrings
+- Find a longest repeated substring
+- Many substring searches reuse the same text
 
 Core Idea:
 
-Sort all suffixes by lexicographic rank and pair the order with an LCP array. Substring searches and repeated-substring questions then become range or neighbor operations on suffix ranks.
+Sort the starting positions of all suffixes in dictionary order. Neighboring suffixes reveal shared prefixes; a longest-common-prefix array supports repeated-substring and distinct-substring questions.
 
 Prerequisites:
 
@@ -8076,15 +7777,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- All substrings
-- Distinct substring count
-- Longest common substring
-- End-position equivalence
-- Online string processing
+- Count distinct substrings without listing them
+- Match another string against all substrings of one text
+- Need an online substring index
 
 Core Idea:
 
-Build the minimal automaton recognizing every substring by extending one character at a time and cloning states when needed. State lengths and suffix links compactly encode substring occurrence classes.
+Build states that group substrings sharing the same occurrence-ending positions. Add characters using transitions, suffix links, and clones when needed; this compact structure represents all substrings.
 
 Prerequisites:
 
@@ -8140,16 +7839,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Paired values cancel
-- Unique element
-- Toggle parity
-- Maximum XOR
-- Missing value
-- Prefix XOR
+- All values except one occur twice
+- Need to toggle an odd/even state
+- Need missing values or XOR comparisons under stated repetition rules
 
 Core Idea:
 
-Use XOR’s cancellation, commutativity, and bitwise independence to remove paired contributions or encode parity. For optimization, choose opposite bits greedily through a binary trie or basis.
+Use the fact that equal values XOR to zero and XOR with zero leaves a value unchanged. Track independent bits or parity; pair cancellation works only when the occurrence-count assumptions fit.
 
 Prerequisites:
 
@@ -8214,15 +7910,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Small set size
-- Select any subset
-- Boolean features
-- Compatibility constraints
-- Set encoded as an integer
+- A small set of items may be selected in any combination
+- Boolean choices fit in a mask
+- Need to test many subset compatibility rules
 
 Core Idea:
 
-Encode membership of a small set in the bits of an integer and enumerate masks from zero to (2^n-1). Bit tests, insertion, removal, and compatibility checks then become constant-time operations.
+Use one bit per item to describe a subset, then try masks from zero through 2^n minus one. Bit operations test membership, but the number of subsets still grows exponentially.
 
 Prerequisites:
 
@@ -8285,15 +7979,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Partition a mask
-- Enumerate subsets of a subset
-- Assign one group at a time
-- Disjoint feature sets
-- Small-universe DP
+- Split a chosen subset into smaller groups
+- Need all subsets contained in an allowed mask
+- A small-set DP chooses a whole group at once
 
 Core Idea:
 
-Enumerate every submask of a mask with `sub = (sub - 1) & mask`, touching exactly the valid subsets. This is the standard transition engine for partitioning and group-assignment DP over small sets.
+To visit only subsets of a given mask, repeatedly use sub = (sub - 1) & mask. Handle the zero subset explicitly and stop there; visiting submasks of all masks takes O(3^n) total iterations.
 
 Prerequisites:
 
@@ -8353,16 +8045,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- K-th ancestor
-- Repeated function application
-- Many ancestor queries
-- Functional graph
-- Jump powers of two
-- LCA queries
+- Many kth-ancestor queries on the same tree
+- Repeatedly apply the same next-state function
+- Need fast jumps or ancestor comparisons after preprocessing
 
 Core Idea:
 
-Precompute the result of (2^j) jumps from every state, then decompose each requested jump count into set bits. The same doubling table supports ancestors, functional graphs, and path aggregates.
+Precompute where 1, 2, 4, 8, and larger power-of-two jumps lead. Answer a long jump by combining its binary-sized pieces; tree-ancestor queries also need a clear missing-ancestor convention.
 
 Prerequisites:
 
@@ -8421,16 +8110,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Point updates
-- Prefix queries
-- Dynamic frequencies
-- Order statistics
-- Count smaller elements
-- Inversion counting
+- Values change one position at a time
+- Need repeated prefix sums or frequency counts
+- Count earlier values by rank after coordinate compression
 
 Core Idea:
 
-Store partial prefix aggregates in ranges determined by the least significant set bit. Point updates and prefix queries both take logarithmic time with a compact array representation.
+Store sums of selected power-of-two-sized ranges in an array. The lowest set bit tells which stored ranges a point update or prefix query must visit; range sums come from subtracting prefixes.
 
 Prerequisites:
 
@@ -8491,15 +8177,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Dynamic range query
-- Point updates
-- Arbitrary associative aggregate
-- Interval decomposition
-- Online queries
+- Need range sums, minima, or other summaries with updates
+- Input changes between queries
+- A query can combine answers from disjoint subranges
 
 Core Idea:
 
-Recursively partition an index range and store an aggregate for each segment. Any query interval decomposes into logarithmically many canonical nodes, while point updates repair one root-to-leaf path.
+Divide the array into a tree of ranges and store a summary for each. Combine summaries to answer a query and update the ranges containing a changed position; the combining operation must be associative.
 
 Prerequisites:
 
@@ -8562,16 +8246,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Range updates
-- Range queries
-- Deferred propagation
-- Interval assignment
-- Interval increment
-- Online coverage
+- Both updates and queries cover ranges
+- Increment or assign whole intervals
+- A valid update rule can modify a segment summary at once
 
 Core Idea:
 
-Attach pending update tags to segment-tree nodes and push them to children only when required. Entire covered ranges can then be updated and queried in logarithmic time.
+Store pending range updates on segment-tree nodes and apply them to children only when needed. This works when update tags compose correctly and can transform a stored range summary without visiting every element.
 
 Prerequisites:
 
@@ -8629,15 +8310,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Static range queries
-- Idempotent operation
-- Range minimum or maximum
-- Immutable array
-- Power-of-two decomposition
+- Many range-minimum or range-maximum queries
+- The array does not change
+- Combining an item with itself leaves the answer unchanged, as with min or GCD
 
 Core Idea:
 
-Precompute answers for every power-of-two interval. Idempotent range queries such as minimum, maximum, GCD, AND, or OR can then combine two overlapping blocks in constant time.
+Precompute summaries for ranges whose lengths are powers of two. On unchanged input, a minimum or other overlap-safe query can combine two covering blocks in constant time; sums need a different combination strategy.
 
 Prerequisites:
 
@@ -8693,16 +8372,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Predecessor or successor
-- Dynamic sorted values
-- Floor or ceiling
-- Rank queries
-- Ordered multiset
-- Online intervals
+- Need the next larger or smaller current value
+- Values arrive and leave online
+- Need sorted order, with special support if ranks or duplicates matter
 
 Core Idea:
 
-Maintain keys in sorted order while supporting logarithmic insertion, deletion, and neighbor queries. Add counts or augmented subtree sizes when duplicates or rank selection matter.
+Keep keys sorted while inserting, deleting, and finding neighboring values. Balanced search trees support this efficiently; Python's list plus bisect finds positions quickly but insertion and deletion are linear.
 
 Prerequisites:
 
@@ -8768,15 +8444,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Directed cycles
-- Mutual reachability
-- Condensation DAG
-- Collapse cyclic dependencies
-- Source components
+- Dependencies contain directed cycles
+- Need groups of mutually reachable nodes
+- Collapsing cycles would simplify later graph processing
 
 Core Idea:
 
-Partition a directed graph into maximal groups whose vertices can all reach one another. Contracting each group produces a DAG on which dependency and reachability reasoning becomes simpler.
+Group directed-graph nodes that can all reach one another. Replace each group by one node to obtain an acyclic graph; this separates cycles from the dependencies between groups.
 
 Prerequisites:
 
@@ -8833,15 +8507,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Critical edge
-- Disconnect after edge removal
-- No alternate route
-- Network vulnerability
-- Low-link value
+- Removing one edge would split a connected component
+- Need critical network connections
+- Need to distinguish a bridge from an edge on a cycle
 
 Core Idea:
 
-During DFS, compare each child’s low-link value with its parent’s discovery time. A tree edge is a bridge exactly when the child’s subtree cannot reach the parent or an ancestor without that edge.
+In an undirected DFS, track the earliest ancestor each child subtree can reach without its parent edge. That edge is a bridge if there is no alternate route back; parallel edges need separate edge identities.
 
 Prerequisites:
 
@@ -8895,15 +8567,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Critical vertex
-- Disconnect after vertex removal
-- Single point of failure
-- Biconnected components
-- Low-link value
+- Removing one vertex would split a connected component
+- Need single points of failure
+- Need to identify articulation points rather than critical edges
 
 Core Idea:
 
-Track discovery and low-link times in an undirected DFS tree. A non-root vertex is an articulation point when a child subtree has no back edge above it; the root is critical when it has multiple DFS children.
+In an undirected DFS, check whether a child subtree can reach above its parent without going through that parent. If not, removing the parent separates that branch; the DFS root has its own multiple-child rule.
 
 Prerequisites:
 
@@ -8956,16 +8626,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Entry and exit time
-- Flatten a tree
-- Subtree range
-- Ancestor query
-- DFS order
-- Path or subtree queries
+- Many queries affect or summarize a subtree
+- Need ancestor checks from entry/exit times
+- Tree values can be flattened into DFS order
 
 Core Idea:
 
-Record each node’s DFS entry and exit positions so every subtree becomes a contiguous interval. Tree queries can then be reduced to array range queries or timestamp comparisons.
+Assign DFS entry and exit positions so a node's entire subtree occupies one array range. This turns subtree sums or updates into range operations; path queries usually need additional structure.
 
 Prerequisites:
 
@@ -9026,15 +8693,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Use every edge exactly once
-- Reconstruct itinerary
-- Arrange directed pairs
-- Degree balance
-- De Bruijn sequence
+- Reconstruct a route from tickets or directed pairs
+- Every connection must be used once
+- Vertices may repeat but edges may not
 
 Core Idea:
 
-Check degree and connectivity conditions, then consume edges with Hierholzer’s algorithm and append vertices during backtracking. Reversing that postorder yields an Euler trail using every edge once.
+Find a route that uses every edge exactly once, not every vertex once. After checking degree and relevant connectivity conditions, follow unused edges and stitch the resulting trails together.
 
 Prerequisites:
 
@@ -9088,16 +8753,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Capacity constraints
-- Route maximum units
-- Disjoint assignments
-- Source and sink
-- Residual network
-- Feasible circulation
+- Connections have capacities
+- Need maximum transport or allocation
+- A matching or assignment can be modeled as units of flow
 
 Core Idea:
 
-Send flow from a source to a sink while maintaining residual capacities that allow earlier choices to be reversed. Many allocation and matching constraints become capacities in a flow network.
+Send as much flow as possible from a source to a sink without exceeding edge capacities. Maintain reverse residual edges so later paths can undo and reroute earlier choices.
 
 Prerequisites:
 
@@ -9156,15 +8818,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Separate source and sink
-- Minimum capacity removal
-- Vertex cover
-- Disconnect a network
-- Flow-cut duality
+- Need the cheapest capacity barrier between source and sink
+- Binary choices can be modeled by a cut
+- Vertex-removal costs can be transformed using node splitting
 
 Core Idea:
 
-After computing maximum flow, vertices reachable from the source in the residual graph define a minimum source–sink cut. Node splitting converts vertex-removal costs into edge capacities.
+Separate a source from a sink by removing edges of minimum total capacity. After maximum flow, residual reachability identifies a minimum cut; a global cut without fixed endpoints is a different problem.
 
 Prerequisites:
 
@@ -9220,15 +8880,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Assign left side to right side
-- One-to-one pairing
-- Worker-job assignment
-- Maximum compatible pairs
-- Minimum vertex cover
+- Assign workers to jobs or people to resources
+- Each item can be matched at most once
+- Need the largest number of compatible left-right pairs
 
 Core Idea:
 
-Model candidates and resources as opposite partitions and add edges for valid pairings. Augmenting paths repeatedly reroute existing matches to increase the matching size.
+Split items into two sides and connect allowed pairs. Find one-to-one assignments by searching for paths that can rearrange existing matches and add another pair.
 
 Prerequisites:
 
@@ -9289,16 +8947,13 @@ Difficulty: Beginner
 
 Recognition Keywords:
 
-- Common divisor
-- Coprime
-- Repeating unit
-- Ratio normalization
-- Bézout identity
-- Least common multiple
+- Need the largest common divisor
+- Simplify a ratio or repeating unit
+- Combine divisibility periods through GCD and LCM
 
 Core Idea:
 
-Use Euclid’s algorithm to replace ((a,b)) with ((b,a \bmod b)) until the remainder is zero. GCD normalizes ratios, exposes periodic structure, and combines with LCM for divisibility counting.
+Repeatedly replace a pair of nonnegative integers (a, b) with (b, a % b) until b is zero. The remaining value is their greatest common divisor; use absolute values when inputs may be negative.
 
 Prerequisites:
 
@@ -9359,16 +9014,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Answer modulo a prime
-- Divisibility by k
-- Remainder classes
-- Cyclic state
-- Large counts
-- Congruence
+- Answer is requested modulo a number
+- Only divisibility or remainder classes matter
+- Large counting formulas must stay within a modulus
 
 Core Idea:
 
-Replace integers by congruent remainder classes while preserving addition and multiplication. Normalize negative values and postpone division until a valid modular inverse is available.
+Keep remainders when addition or multiplication would create huge values. Normalize signs according to the language; modular division requires an inverse and ordinary integer division is not a substitute.
 
 Prerequisites:
 
@@ -9430,15 +9082,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Huge exponent
-- Repeated multiplication
-- Exponent modulo
-- Power in logarithmic time
-- Binary exponentiation
+- Exponent is too large for repeated multiplication
+- Need modular powers
+- A repeated operation can be combined in power-of-two blocks
 
 Core Idea:
 
-Decompose the exponent into binary powers and repeatedly square the base. This reduces exponentiation from linear to logarithmic multiplications and generalizes to matrices and other monoids.
+Build a power by repeatedly squaring the base and multiplying it into the answer for set bits of the exponent. This uses logarithmically many multiplications; apply the modulus at each step when needed.
 
 Prerequisites:
 
@@ -9500,15 +9150,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Division under a modulus
-- Prime modulus
-- Binomial coefficient modulo p
-- Factorial ratios
-- Undo multiplication
+- Need division inside modular arithmetic
+- Compute factorial ratios under a prime modulus
+- Need to undo multiplication and the divisor is invertible
 
 Core Idea:
 
-Replace division by multiplication with an inverse satisfying (a a^{-1} \equiv 1 \pmod m). Compute inverses with extended Euclid when coprime or Fermat’s theorem under a prime modulus.
+An inverse of a modulo m is a value that makes their product have remainder one. It exists exactly when a and m are coprime; use extended Euclid, or Fermat's exponent only under a prime modulus with a nonzero remainder.
 
 Prerequisites:
 
@@ -9562,15 +9210,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Many primality queries
-- All primes up to n
-- Smallest prime factor
-- Factor many numbers
-- Prime contribution counting
+- Need all primes up to a known bound
+- Many primality queries share the same range
+- Many numbers need factorization after preprocessing
 
 Core Idea:
 
-Mark multiples of each discovered prime, starting from its square, to preprocess primality for an entire range. A smallest-prime-factor sieve also makes repeated factorization efficient.
+Build a table of primes up to a limit by marking multiples of each prime, starting at its square. A smallest-prime-factor table is a related preprocessing method for repeated factorizations.
 
 Prerequisites:
 
@@ -9633,15 +9279,13 @@ Difficulty: Intermediate
 
 Recognition Keywords:
 
-- Prime factors
-- Divisor structure
-- Shared factor connectivity
-- Product constraints
-- Factor exponents
+- Need divisor counts or prime exponents
+- Numbers are related by shared factors
+- Product or divisibility rules are easier to express with prime powers
 
 Core Idea:
 
-Express every positive integer as a product of prime powers and reason independently about their exponents. Trial division is sufficient for one small number; smallest-prime-factor preprocessing handles many values.
+Break a positive integer into prime factors and their counts. Trial division suits smaller single values; a precomputed smallest-prime-factor table helps when many bounded values must be factored.
 
 Prerequisites:
 
@@ -9706,15 +9350,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Huge recurrence index
-- Linear recurrence
-- Repeated state transition
-- Fixed-size transition matrix
-- Logarithmic-time DP
+- Need a recurrence value at a huge index
+- Each new state is a linear combination of a fixed number of earlier values
+- The same small transition matrix is reused many times
 
 Core Idea:
 
-Encode a fixed-order linear recurrence as multiplication by a transition matrix, then raise that matrix to a large power. Binary exponentiation reduces the number of transitions from linear to logarithmic.
+Write a fixed-size linear recurrence as one matrix transformation. Raise the transition matrix to a large power with repeated squaring instead of applying every intermediate step.
 
 Prerequisites:
 
@@ -9777,16 +9419,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Count arrangements
-- Choose k from n
-- Permutations with repetition
-- Interleavings
-- Factorial ratios
-- Stars and bars
+- Choose items or arrange positions
+- Count interleavings or repeated objects
+- Direct enumeration is too large and the structure can be counted
 
 Core Idea:
 
-Count outcomes structurally with permutations, combinations, multinomials, inclusion–exclusion, or constructive recurrences. Precompute factorials and inverse factorials when many modular binomial queries are required.
+Decide what distinguishes an outcome before counting it: order, repetition, and overlap all matter. Then choose a formula or recurrence such as combinations, permutations, or inclusion-exclusion.
 
 Prerequisites:
 
@@ -9851,15 +9490,13 @@ Difficulty: Advanced
 
 Recognition Keywords:
 
-- Balanced parentheses
-- Binary-tree shapes
-- Noncrossing structures
-- Recursive left/right split
-- Polygon triangulation
+- Count balanced-parenthesis sequences
+- Count binary-tree shapes or polygon triangulations
+- Noncrossing structures split into two independent smaller structures
 
 Core Idea:
 
-Catalan objects split around a distinguished root into independent left and right objects, yielding (C_n=\sum C_iC_{n-1-i}). Use the recurrence for structural DP or the closed form for pure counting.
+Look for objects that split into an independent left part and right part around a root or matching pair. Summing the products of the two smaller counts gives Catalan's recurrence, with the empty object counted as one.
 
 Prerequisites:
 
